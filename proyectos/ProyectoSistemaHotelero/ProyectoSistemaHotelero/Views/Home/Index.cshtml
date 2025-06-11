@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="hero-section" style="background-image: url('/ImagenesBG/bghomepage.png');">
+    <div class="hero-overlay">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">¡Limón Pura Vida!</h1>
+
+                <div class="search-container">
+                    <div class="search-tabs">
+                        <button class="tab-btn" data-tab="all">Busca</button>
+                        <button class="tab-btn active" data-tab="hospedajes">Hospedajes</button>
+                        <button class="tab-btn" data-tab="actividades">Actividades</button>
+                    </div>
+
+                    <!-- Formulario para búsqueda de hospedajes -->
+                    <div class="search-form" id="hospedajes-form">
+                        <div class="search-inputs">
+                            <div class="input-group">
+                                <label>Ubicación</label>
+                                <input type="text" placeholder="Puerto Limón" class="form-control">
+                            </div>
+
+                            <div class="input-group">
+                                <label>Check In</label>
+                                <input type="text" placeholder="30/06/25" class="form-control">
+                            </div>
+
+                            <div class="input-group">
+                                <label>Check Out</label>
+                                <input type="text" placeholder="05/07/25" class="form-control">
+                            </div>
+
+                            <div class="input-group">
+                                <label>Huéspedes</label>
+                                <input type="text" placeholder="3 personas" class="form-control">
+                            </div>
+
+                            <button class="search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Formulario para búsqueda de actividades -->
+                    <div class="search-form" id="actividades-form" style="display: none;">
+                        <div class="search-inputs simple-search">
+                            <div class="input-group full-width">
+                                <label>Ubicación</label>
+                                <input type="text" placeholder="Puerto Limón" class="form-control">
+                            </div>
+
+                            <button class="search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Manejar el cambio de pestañas
+            $(".tab-btn").click(function() {
+                // Remover clase activa de todas las pestañas
+                $(".tab-btn").removeClass("active");
+                // Agregar clase activa a la pestaña seleccionada
+                $(this).addClass("active");
+
+                // Ocultar todos los formularios
+                $("#hospedajes-form, #actividades-form").hide();
+
+                // Mostrar el formulario correspondiente según la pestaña
+                var tab = $(this).data("tab");
+                if (tab === "actividades") {
+                    $("#actividades-form").show();
+                } else {
+                    // Para "hospedajes" o "all" (Busca), mostramos el formulario de hospedajes
+                    $("#hospedajes-form").show();
+                }
+            });
+        });
+    </script>
+}
