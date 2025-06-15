@@ -4727,11 +4727,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\erinc\\Documents\\GitHub\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj",
+      "projectUniqueName": "C:\\Users\\erinc\\source\\repos\\Bases-de-Datos-1\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj",
       "projectName": "ProyectoSistemaHotelero",
-      "projectPath": "C:\\Users\\erinc\\Documents\\GitHub\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj",
+      "projectPath": "C:\\Users\\erinc\\source\\repos\\Bases-de-Datos-1\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj",
       "packagesPath": "C:\\Users\\erinc\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\erinc\\Documents\\GitHub\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\obj\\",
+      "outputPath": "C:\\Users\\erinc\\source\\repos\\Bases-de-Datos-1\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

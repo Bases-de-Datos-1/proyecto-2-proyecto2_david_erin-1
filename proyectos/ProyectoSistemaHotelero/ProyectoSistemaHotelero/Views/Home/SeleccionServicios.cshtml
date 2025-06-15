@@ -1,0 +1,124 @@
+﻿@{
+    ViewData["Title"] = "Selección de Servicios - UTravel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .main-content {
+        background-color: #f8f9fa;
+        min-height: 70vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 50px 0;
+    }
+
+    .service-title {
+        font-size: 32px;
+        color: #333;
+        margin-bottom: 50px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .service-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px 20px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        margin: 0 15px;
+        min-width: 220px;
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+    .service-image {
+        width: 80px;
+        height: 60px;
+        border-radius: 10px;
+        object-fit: cover;
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #7db8b3 0%, #62a3a8 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .service-icon {
+        font-size: 30px;
+        color: white;
+    }
+
+    .service-name {
+        font-size: 20px;
+        color: #333;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .service-description {
+        font-size: 14px;
+        color: #666;
+        margin-top: 8px;
+        line-height: 1.4;
+    }
+
+    .services-container {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+</style>
+
+<!-- Contenido Principal -->
+<div class="main-content">
+    <div class="container">
+        <h2 class="service-title">¿Qué servicio deseas proveer?</h2>
+
+        <div class="services-container">
+            <div class="service-card" onclick="selectService('hospedaje')">
+                <div class="service-image">
+                    <i class="fas fa-bed service-icon"></i>
+                </div>
+                <h3 class="service-name">Hospedaje</h3>
+                <p class="service-description">Registra tu hotel, hostal o casa de huéspedes</p>
+            </div>
+
+            <div class="service-card" onclick="selectService('recreativo')">
+                <div class="service-image">
+                    <i class="fas fa-umbrella-beach service-icon"></i>
+                </div>
+                <h3 class="service-name">Recreativo</h3>
+                <p class="service-description">Registra tours, actividades y experiencias</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function selectService(serviceType) {
+            if (serviceType === 'hospedaje') {
+                window.location.href = '@Url.Action("RegistroHospedaje", "Home")';
+            } else if (serviceType === 'recreativo') {
+                window.location.href = '@Url.Action("RegistroRecreativos", "Home")';
+            }
+        }
+    </script>
+}

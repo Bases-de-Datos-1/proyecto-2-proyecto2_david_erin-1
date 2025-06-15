@@ -23,6 +23,44 @@ namespace ProyectoSistemaHotelero.Controllers
             return View();
         }
 
+        public IActionResult SeleccionServicios()
+        {
+            return View();
+        }
+
+        public IActionResult RegistroHospedaje()
+        {
+            return View();
+        }
+
+        public IActionResult RegistroRecreativos()
+        {
+            return View();
+        }
+
+        public IActionResult FormularioHospedaje(string tipo)
+        {
+            ViewBag.TipoHospedaje = tipo;
+            return View();
+        }
+
+        public IActionResult DetallesHospedaje()
+        {
+            return View();
+        }
+        public IActionResult DireccionEstablecimiento()
+        {
+            return View();
+        }
+        public IActionResult ConfirmacionRegistro()
+        {
+            return View();
+        }
+        public IActionResult ServiciosEstablecimiento()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

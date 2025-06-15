@@ -1,7 +1,12 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\erinc\\Documents\\GitHub\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\erinc\\source\\repos\\Bases-de-Datos-1\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{FFC36284-4A7F-417A-9B42-FCA9CC2252D9}|ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj|c:\\users\\erinc\\source\\repos\\bases-de-datos-1\\proyecto-2-proyecto2_david_erin-1\\proyectos\\proyectosistemahotelero\\proyectosistemahotelero\\views\\home\\formulariohospedaje.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{FFC36284-4A7F-417A-9B42-FCA9CC2252D9}|ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj|solutionrelative:proyectosistemahotelero\\views\\home\\formulariohospedaje.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,7 +14,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -26,6 +31,19 @@
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FormularioHospedaje.cshtml",
+              "DocumentMoniker": "C:\\Users\\erinc\\source\\repos\\Bases-de-Datos-1\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Views\\Home\\FormularioHospedaje.cshtml",
+              "RelativeDocumentMoniker": "ProyectoSistemaHotelero\\Views\\Home\\FormularioHospedaje.cshtml",
+              "ToolTip": "C:\\Users\\erinc\\source\\repos\\Bases-de-Datos-1\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Views\\Home\\FormularioHospedaje.cshtml",
+              "RelativeToolTip": "ProyectoSistemaHotelero\\Views\\Home\\FormularioHospedaje.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-15T00:41:42.708Z",
+              "EditorCaption": ""
             }
           ]
         }

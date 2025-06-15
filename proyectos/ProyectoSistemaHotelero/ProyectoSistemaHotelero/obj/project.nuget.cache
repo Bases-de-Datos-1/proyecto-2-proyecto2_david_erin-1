@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "qelF0VyV0xU=",
+  "dgSpecHash": "Avp73CUCCIc=",
   "success": true,
-  "projectFilePath": "C:\\Users\\erinc\\Documents\\GitHub\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj",
+  "projectFilePath": "C:\\Users\\erinc\\source\\repos\\Bases-de-Datos-1\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\erinc\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\erinc\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
