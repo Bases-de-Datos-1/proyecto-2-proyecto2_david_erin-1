@@ -1,0 +1,217 @@
+﻿@{
+    ViewData["Title"] = "Servicios de la Actividad - UTravel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .main-content {
+        background-color: #f8f9fa;
+        min-height: 80vh;
+        padding: 120px 0;
+    }
+
+    .selection-title {
+        font-size: 32px;
+        color: #333;
+        margin-bottom: 80px;
+        font-weight: 600;
+        line-height: 1.3;
+        text-align: center;
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 25px;
+        margin-bottom: 60px;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .service-card {
+        background: white;
+        border-radius: 20px;
+        padding: 25px 20px;
+        text-align: center;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 3px solid transparent;
+        min-height: 180px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+            border-color: #7db8b3;
+        }
+
+        .service-card.selected {
+            border-color: #7db8b3;
+            background: linear-gradient(135deg, #f8fdfc 0%, #e8f6f3 100%);
+            transform: translateY(-5px);
+        }
+
+    .service-image {
+        width: 80px;
+        height: 80px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #7db8b3 0%, #62a3a8 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 35px;
+        color: white;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .service-name {
+        font-size: 18px;
+        color: #333;
+        font-weight: 600;
+        margin: 0;
+        line-height: 1.2;
+        text-align: center;
+    }
+
+    .continue-btn {
+        background: linear-gradient(135deg, #7db8b3 0%, #62a3a8 100%);
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 18px 50px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: block;
+        margin: 50px auto 0 auto;
+        min-width: 200px;
+    }
+
+        .continue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(125, 184, 179, 0.3);
+        }
+
+        .continue-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+</style>
+
+<div class="main-content">
+    <div class="container">
+        <h2 class="selection-title">¿Qué servicios incluye<br>tu actividad?</h2>
+
+        <div class="services-grid">
+            <div class="service-card" onclick="selectService(this, 'transporte-incluido')">
+                <div class="service-image">
+                    <i class="fas fa-bus"></i>
+                </div>
+                <h3 class="service-name">Transporte<br>Incluido</h3>
+            </div>
+
+            <div class="service-card" onclick="selectService(this, 'guia-especializado')">
+                <div class="service-image">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <h3 class="service-name">Guía<br>Especializado</h3>
+            </div>
+
+            <div class="service-card" onclick="selectService(this, 'equipo-incluido')">
+                <div class="service-image">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <h3 class="service-name">Equipo<br>Incluido</h3>
+            </div>
+
+            <div class="service-card" onclick="selectService(this, 'seguro-accidentes')">
+                <div class="service-image">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="service-name">Seguro de<br>Accidentes</h3>
+            </div>
+
+            <div class="service-card" onclick="selectService(this, 'almuerzo-incluido')">
+                <div class="service-image">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <h3 class="service-name">Almuerzo<br>Incluido</h3>
+            </div>
+
+            <div class="service-card" onclick="selectService(this, 'fotografia-profesional')">
+                <div class="service-image">
+                    <i class="fas fa-camera"></i>
+                </div>
+                <h3 class="service-name">Fotografía<br>Profesional</h3>
+            </div>
+
+            <div class="service-card" onclick="selectService(this, 'certificacion')">
+                <div class="service-image">
+                    <i class="fas fa-certificate"></i>
+                </div>
+                <h3 class="service-name">Certificación</h3>
+            </div>
+
+            <div class="service-card" onclick="selectService(this, 'grupos-pequenos')">
+                <div class="service-image">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 class="service-name">Grupos<br>Pequeños</h3>
+            </div>
+
+            <div class="service-card" onclick="selectService(this, 'acceso-vip')">
+                <div class="service-image">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h3 class="service-name">Acceso VIP</h3>
+            </div>
+
+            <div class="service-card" onclick="selectService(this, 'souvenir-incluido')">
+                <div class="service-image">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <h3 class="service-name">Souvenir<br>Incluido</h3>
+            </div>
+        </div>
+
+        <button class="continue-btn" id="continueBtn" onclick="continueToNextStep()">
+            Siguiente
+        </button>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let selectedServices = [];
+
+        function selectService(element, service) {
+            // Toggle selection
+            if (element.classList.contains('selected')) {
+                element.classList.remove('selected');
+                selectedServices = selectedServices.filter(s => s !== service);
+            } else {
+                element.classList.add('selected');
+                selectedServices.push(service);
+            }
+        }
+
+        function continueToNextStep() {
+            // Guardar servicios seleccionados (pueden ser cero)
+            sessionStorage.setItem('ServiciosActividad', JSON.stringify(selectedServices));
+
+            // Redirigir al siguiente paso (siempre permitir continuar)
+            window.location.href = '@Url.Action("AcercaActividad", "Home")';
+        }
+    </script>
+}

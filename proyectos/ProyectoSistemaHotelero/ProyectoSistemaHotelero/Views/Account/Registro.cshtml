@@ -1,0 +1,478 @@
+﻿@{
+    ViewData["Title"] = "Registro - UTravel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .main-content {
+        background-color: #f8f9fa;
+        min-height: 100vh;
+        padding: 100px 0 150px 0;
+    }
+
+    .form-title {
+        font-size: 32px;
+        color: #333;
+        margin-bottom: 60px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .form-container {
+        max-width: 700px;
+        margin: 0 auto;
+        background: white;
+        padding: 50px;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+    }
+
+    .form-group {
+        margin-bottom: 35px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #333;
+        font-size: 16px;
+        min-width: 200px;
+        text-align: left;
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .form-control {
+        flex: 1;
+        padding: 12px 16px;
+        border: none;
+        border-bottom: 2px solid #e9ecef;
+        border-radius: 0;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+        background-color: transparent;
+        box-sizing: border-box;
+    }
+
+    .form-select {
+        flex: 1;
+        padding: 12px 16px;
+        border: none;
+        border-bottom: 2px solid #e9ecef;
+        border-radius: 0;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+        background-color: transparent;
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+
+        .form-control:focus,
+        .form-select:focus {
+            outline: none;
+            border-bottom-color: #7db8b3;
+            box-shadow: none;
+            background-color: transparent;
+        }
+
+    .form-control::placeholder {
+        color: #adb5bd;
+        font-weight: normal;
+        font-style: italic;
+    }
+
+    .phone-group {
+        display: flex;
+        gap: 10px;
+        flex: 1;
+    }
+
+    .phone-code {
+        min-width: 70px;
+        max-width: 70px;
+        flex: none;
+    }
+
+    .phone-number {
+        flex: 1;
+    }
+
+    .form-select {
+        padding: 12px 16px;
+        border: none;
+        border-bottom: 2px solid #e9ecef;
+        border-radius: 0;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+        background-color: transparent;
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+
+    .siguiente-btn {
+        background: #666;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 12px 30px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 30px auto 0 auto;
+        display: block;
+    }
+
+        .siguiente-btn:hover {
+            background: #555;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .siguiente-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+    .container {
+        max-width: 900px;
+    }
+</style>
+
+<div class="main-content">
+    <div class="container">
+        <h2 class="form-title">Información Personal</h2>
+
+        <div class="form-container">
+            <form id="registroUsuarioForm">
+                <div class="form-group">
+                    <label class="form-label" for="nombreCompleto">
+                        Nombre Completo
+                    </label>
+                    <input type="text"
+                           class="form-control"
+                           id="nombreCompleto"
+                           name="nombreCompleto"
+                           placeholder="Marco Gilberto Blanco"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="fechaNacimiento">
+                        Fecha de Nacimiento
+                    </label>
+                    <input type="date"
+                           class="form-control"
+                           id="fechaNacimiento"
+                           name="fechaNacimiento"
+                           placeholder="20/03/2000"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="tipoIdentificacion">
+                        Tipo de Identificación
+                    </label>
+                    <select class="form-select"
+                            id="tipoIdentificacion"
+                            name="tipoIdentificacion"
+                            required>
+                        <option value="">Cédula de identidad</option>
+                        <option value="cedula">Cédula de identidad</option>
+                        <option value="pasaporte">Pasaporte</option>
+                        <option value="residencia">Cédula de residencia</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="numeroIdentificacion">
+                        Cédula o Número de Identificación
+                    </label>
+                    <input type="text"
+                           class="form-control"
+                           id="numeroIdentificacion"
+                           name="numeroIdentificacion"
+                           placeholder="708850456"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="paisResidencia">
+                        País de Residencia
+                    </label>
+                    <select class="form-select"
+                            id="paisResidencia"
+                            name="paisResidencia"
+                            onchange="updatePhoneCodes()"
+                            required>
+                        <option value="">Seleccionar país</option>
+                        <option value="Costa Rica" data-code="+506" selected>Costa Rica</option>
+                        <option value="Estados Unidos" data-code="+1">Estados Unidos</option>
+                        <option value="Canadá" data-code="+1">Canadá</option>
+                        <option value="México" data-code="+52">México</option>
+                        <option value="Guatemala" data-code="+502">Guatemala</option>
+                        <option value="Nicaragua" data-code="+505">Nicaragua</option>
+                        <option value="Panamá" data-code="+507">Panamá</option>
+                        <option value="España" data-code="+34">España</option>
+                        <option value="Francia" data-code="+33">Francia</option>
+                        <option value="Alemania" data-code="+49">Alemania</option>
+                        <option value="Reino Unido" data-code="+44">Reino Unido</option>
+                        <option value="Italia" data-code="+39">Italia</option>
+                        <option value="Argentina" data-code="+54">Argentina</option>
+                        <option value="Brasil" data-code="+55">Brasil</option>
+                        <option value="Chile" data-code="+56">Chile</option>
+                        <option value="Colombia" data-code="+57">Colombia</option>
+                        <option value="Perú" data-code="+51">Perú</option>
+                        <option value="Ecuador" data-code="+593">Ecuador</option>
+                        <option value="Venezuela" data-code="+58">Venezuela</option>
+                        <option value="Uruguay" data-code="+598">Uruguay</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="direccion">
+                        Dirección (CR)
+                    </label>
+                    <input type="text"
+                           class="form-control"
+                           id="direccion"
+                           name="direccion"
+                           placeholder="Limón, Limón, Carrera 3 continúo al milenio de la esquina"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Teléfonos
+                    </label>
+                    <div class="phone-group">
+                        <select class="form-select phone-code" name="codigoTelefono1" id="codigoTelefono1" required>
+                            <option value="">País</option>
+                            <option value="+506" selected>+506</option>
+                            <option value="+1">+1</option>
+                            <option value="+52">+52</option>
+                            <option value="+502">+502</option>
+                            <option value="+505">+505</option>
+                            <option value="+507">+507</option>
+                            <option value="+34">+34</option>
+                            <option value="+33">+33</option>
+                            <option value="+49">+49</option>
+                            <option value="+44">+44</option>
+                            <option value="+39">+39</option>
+                            <option value="+54">+54</option>
+                            <option value="+55">+55</option>
+                            <option value="+56">+56</option>
+                            <option value="+57">+57</option>
+                            <option value="+51">+51</option>
+                            <option value="+593">+593</option>
+                            <option value="+58">+58</option>
+                            <option value="+598">+598</option>
+                        </select>
+                        <input type="tel"
+                               class="form-control phone-number"
+                               name="telefono1"
+                               placeholder="61827000"
+                               inputmode="numeric"
+                               required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+
+                    </label>
+                    <div class="phone-group">
+                        <select class="form-select phone-code" name="codigoTelefono2" id="codigoTelefono2">
+                            <option value="">País</option>
+                            <option value="+506" selected>+506</option>
+                            <option value="+1">+1</option>
+                            <option value="+52">+52</option>
+                            <option value="+502">+502</option>
+                            <option value="+505">+505</option>
+                            <option value="+507">+507</option>
+                            <option value="+34">+34</option>
+                            <option value="+33">+33</option>
+                            <option value="+49">+49</option>
+                            <option value="+44">+44</option>
+                            <option value="+39">+39</option>
+                            <option value="+54">+54</option>
+                            <option value="+55">+55</option>
+                            <option value="+56">+56</option>
+                            <option value="+57">+57</option>
+                            <option value="+51">+51</option>
+                            <option value="+593">+593</option>
+                            <option value="+58">+58</option>
+                            <option value="+598">+598</option>
+                        </select>
+                        <input type="tel"
+                               class="form-control phone-number"
+                               name="telefono2"
+                               placeholder="27580000"
+                               inputmode="numeric">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+
+                    </label>
+                    <div class="phone-group">
+                        <select class="form-select phone-code" name="codigoTelefono3" id="codigoTelefono3">
+                            <option value="">País</option>
+                            <option value="+506" selected>+506</option>
+                            <option value="+1">+1</option>
+                            <option value="+52">+52</option>
+                            <option value="+502">+502</option>
+                            <option value="+505">+505</option>
+                            <option value="+507">+507</option>
+                            <option value="+34">+34</option>
+                            <option value="+33">+33</option>
+                            <option value="+49">+49</option>
+                            <option value="+44">+44</option>
+                            <option value="+39">+39</option>
+                            <option value="+54">+54</option>
+                            <option value="+55">+55</option>
+                            <option value="+56">+56</option>
+                            <option value="+57">+57</option>
+                            <option value="+51">+51</option>
+                            <option value="+593">+593</option>
+                            <option value="+58">+58</option>
+                            <option value="+598">+598</option>
+                        </select>
+                        <input type="tel"
+                               class="form-control phone-number"
+                               name="telefono3"
+                               placeholder="27840060"
+                               inputmode="numeric">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="correoElectronico">
+                        Correo Electrónico
+                    </label>
+                    <input type="email"
+                           class="form-control"
+                           id="correoElectronico"
+                           name="correoElectronico"
+                           placeholder="marco@gmail.com"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="contrasena">
+                        Contraseña
+                    </label>
+                    <input type="password"
+                           class="form-control"
+                           id="contrasena"
+                           name="contrasena"
+                           placeholder="Ingrese su contraseña"
+                           required>
+                </div>
+
+                <button type="button" class="siguiente-btn" onclick="continuarRegistro()">
+                    Siguiente
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function updatePhoneCodes() {
+            const paisSelect = document.getElementById('paisResidencia');
+            const selectedOption = paisSelect.options[paisSelect.selectedIndex];
+            const phoneCode = selectedOption.getAttribute('data-code');
+
+            if (phoneCode) {
+                // Actualizar los tres selectores de código de país
+                const phoneSelects = ['codigoTelefono1', 'codigoTelefono2', 'codigoTelefono3'];
+
+                phoneSelects.forEach(selectId => {
+                    const phoneSelect = document.getElementById(selectId);
+                    const options = phoneSelect.options;
+
+                    // Buscar y seleccionar el código correspondiente
+                    for (let i = 0; i < options.length; i++) {
+                        if (options[i].value === phoneCode) {
+                            phoneSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                });
+            }
+        }
+
+        function continuarRegistro() {
+            const form = document.getElementById('registroUsuarioForm');
+
+            // Validar campos requeridos
+            if (form.checkValidity()) {
+                // Obtener los datos del formulario
+                const formData = new FormData(form);
+                const data = {};
+                for (let [key, value] of formData.entries()) {
+                    data[key] = value;
+                }
+
+                // Guardar temporalmente en sessionStorage
+                sessionStorage.setItem('informacionPersonal', JSON.stringify(data));
+
+                // Redirigir al siguiente paso del registro (ej: crear contraseña)
+                window.location.href = '@Url.Action("CompletarRegistro", "Account")';
+            } else {
+                // Mostrar errores de validación
+                form.reportValidity();
+            }
+        }
+
+        // Validación en tiempo real para habilitar/deshabilitar botón
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registroUsuarioForm');
+            const btn = document.querySelector('.siguiente-btn');
+
+            function validateForm() {
+                // Solo validar campos específicamente requeridos
+                const requiredFields = [
+                    'nombreCompleto',
+                    'fechaNacimiento',
+                    'tipoIdentificacion',
+                    'numeroIdentificacion',
+                    'paisResidencia',
+                    'direccion',
+                    'codigoTelefono1',
+                    'telefono1',
+                    'correoElectronico',
+                    'contrasena'
+                ];
+
+                let allValid = true;
+
+                requiredFields.forEach(fieldName => {
+                    const field = form.querySelector(`[name="${fieldName}"]`);
+                    if (field && !field.value.trim()) {
+                        allValid = false;
+                    }
+                });
+
+                btn.disabled = !allValid;
+            }
+
+            // Validar al escribir en los campos
+            form.addEventListener('input', validateForm);
+            form.addEventListener('change', validateForm);
+
+            // Validación inicial
+            validateForm();
+        });
+    </script>
+}

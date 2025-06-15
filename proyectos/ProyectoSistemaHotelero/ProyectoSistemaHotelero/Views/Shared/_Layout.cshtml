@@ -8,6 +8,73 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ProyectoSistemaHotelero.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <style>
+        .user-menu {
+            position: relative;
+            display: inline-block;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+            margin-top: 5px;
+        }
+
+            .user-dropdown.show {
+                display: block;
+            }
+
+        .dropdown-item {
+            display: block;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid #f1f1f1;
+            transition: background-color 0.2s;
+        }
+
+            .dropdown-item:last-child {
+                border-bottom: none;
+            }
+
+            .dropdown-item:hover {
+                background-color: #f8f9fa;
+                color: #333;
+                text-decoration: none;
+            }
+
+            .dropdown-item i {
+                margin-right: 10px;
+                width: 16px;
+            }
+
+        .user-info {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f1f1f1;
+            background-color: #f8f9fa;
+        }
+
+        .user-email {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+        }
+
+        .user-name {
+            font-weight: 600;
+            margin: 0;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -31,9 +98,18 @@
                     </ul>
                     <div class="d-flex align-items-center">
                         <a class="btn btn-dark rounded-pill px-4 me-3" asp-area="" asp-controller="Home" asp-action="SeleccionServicios">Registra Tu Negocio</a>
-                        <button class="btn btn-light rounded-circle">
-                            <i class="fas fa-user"></i>
-                        </button>
+
+                        <!-- Menú de usuario -->
+                        <div class="user-menu">
+                            <button class="btn btn-light rounded-circle" id="userMenuButton" onclick="toggleUserMenu()">
+                                <i class="fas fa-user"></i>
+                            </button>
+
+                            <!-- Dropdown para usuario -->
+                            <div class="user-dropdown" id="userDropdown">
+                                <!-- Contenido se generará dinámicamente con JavaScript -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -109,6 +185,85 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        // Variable para detectar si el usuario está autenticado
+        // En tu aplicación real, esto vendría del servidor usando Razor
+        let isUserLoggedIn = @(User.Identity.IsAuthenticated ? "true" : "false");
+        let currentUser = {
+            name: "@(User.Identity.IsAuthenticated? User.Identity.Name : "")",
+            email: "@(User.Identity.IsAuthenticated? User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "" : "")"
+        };
+
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+
+            if (dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            } else {
+                // Generar contenido del dropdown según el estado de autenticación
+                generateDropdownContent();
+                dropdown.classList.add('show');
+            }
+        }
+
+        function generateDropdownContent() {
+            const dropdown = document.getElementById('userDropdown');
+
+            if (isUserLoggedIn) {
+                // Usuario autenticado - mostrar opciones de cuenta
+                dropdown.innerHTML = `
+                    <div class="user-info">
+                        <p class="user-name">${currentUser.name || 'Usuario'}</p>
+                        <p class="user-email">${currentUser.email || 'email@ejemplo.com'}</p>
+                    </div>
+                    <a href="/Account/MiCuenta" class="dropdown-item">
+                        <i class="fas fa-user-circle"></i> Mi Cuenta
+                    </a>
+                    <a href="/Account/MisNegocios" class="dropdown-item">
+                        <i class="fas fa-building"></i> Mis Negocios
+                    </a>
+                    <a href="/Account/Configuracion" class="dropdown-item">
+                        <i class="fas fa-cog"></i> Configuración
+                    </a>
+                    <form method="post" action="/Account/Logout" style="margin: 0;">
+                        <button type="submit" class="dropdown-item" style="border: none; background: none; width: 100%; text-align: left;">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                        </button>
+                    </form>
+                `;
+            } else {
+                // Usuario no autenticado - mostrar opciones de login/registro
+                dropdown.innerHTML = `
+                    <a href="/Account/Login" class="dropdown-item">
+                        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                    </a>
+                    <a href="/Account/Registro" class="dropdown-item">
+                        <i class="fas fa-user-plus"></i> Registrarse
+                    </a>
+                `;
+            }
+        }
+
+        // Cerrar dropdown al hacer clic fuera
+        document.addEventListener('click', function(event) {
+            const userMenu = document.querySelector('.user-menu');
+            const dropdown = document.getElementById('userDropdown');
+
+            if (!userMenu.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Prevenir que el form de logout cierre el dropdown antes de enviarse
+        document.addEventListener('submit', function(event) {
+            if (event.target.closest('.dropdown-item')) {
+                // Permitir que el form se envíe normalmente
+                return true;
+            }
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,0 +1,125 @@
+﻿@{
+    ViewData["Title"] = "Registro Completado - UTravel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .main-content {
+        background-color: #f8f9fa;
+        min-height: 100vh;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .confirmation-container {
+        max-width: 700px;
+        margin: 0 auto;
+        background: white;
+        padding: 60px 50px;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+        text-align: left;
+    }
+
+    .confirmation-title {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 30px;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    .confirmation-description {
+        font-size: 16px;
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 40px;
+    }
+
+    .publicar-btn {
+        background: #666;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 12px 30px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+        .publicar-btn:hover {
+            background: #555;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+    .container {
+        max-width: 900px;
+    }
+</style>
+
+<div class="main-content">
+    <div class="container">
+        <div class="confirmation-container">
+            <h2 class="confirmation-title">
+                Toda la información ha sido<br>
+                recopilada satisfactoriamente!
+            </h2>
+
+            <p class="confirmation-description">
+                La información puede ser editada en la sección de sus actividades en caso de necesitarlo posteriormente
+            </p>
+
+            <button type="button" class="publicar-btn" onclick="publicarActividad()">
+                Publicar mi negocio
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function publicarActividad() {
+            // Recopilar todos los datos guardados en sessionStorage para recreativos
+            const actividadesSeleccionadas = JSON.parse(sessionStorage.getItem('actividadesSeleccionadas') || '[]');
+            const informacionRecreativos = JSON.parse(sessionStorage.getItem('informacionRecreativos') || '{}');
+            const serviciosActividad = JSON.parse(sessionStorage.getItem('serviciosActividad') || '[]');
+            const acercaActividad = JSON.parse(sessionStorage.getItem('acercaActividad') || '{}');
+            const direccionActividad = JSON.parse(sessionStorage.getItem('direccionActividad') || '{}');
+
+            // Crear objeto completo con toda la información de la actividad recreativa
+            const registroCompleto = {
+                tipoServicio: 'recreativo',
+                actividades: actividadesSeleccionadas,
+                informacionEmpresa: informacionRecreativos,
+                serviciosIncluidos: serviciosActividad,
+                descripcionPrecio: acercaActividad,
+                direccion: direccionActividad,
+                fechaRegistro: new Date().toISOString()
+            };
+
+            console.log('Datos completos del registro recreativo:', registroCompleto);
+
+            // Aquí harías la llamada al servidor para guardar los datos
+            // Por ejemplo: enviar a una acción del controlador
+
+            // Mostrar mensaje de éxito y redirigir
+            alert('¡Actividad recreativa publicada exitosamente!');
+
+            // Limpiar sessionStorage
+            sessionStorage.removeItem('actividadesSeleccionadas');
+            sessionStorage.removeItem('informacionRecreativos');
+            sessionStorage.removeItem('serviciosActividad');
+            sessionStorage.removeItem('acercaActividad');
+            sessionStorage.removeItem('direccionActividad');
+
+            // Redirigir a la página principal o a una página de éxito
+            window.location.href = '@Url.Action("Index", "Home")';
+        }
+    </script>
+}

@@ -1,0 +1,187 @@
+﻿@{
+    ViewData["Title"] = "Registro de Actividades - UTravel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .main-content {
+        background-color: #f8f9fa;
+        min-height: 80vh;
+        padding: 120px 0;
+    }
+
+    .selection-title {
+        font-size: 32px;
+        color: #333;
+        margin-bottom: 80px;
+        font-weight: 600;
+        line-height: 1.3;
+        text-align: center;
+    }
+
+    .activities-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 25px;
+        margin-bottom: 60px;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .activity-card {
+        background: white;
+        border-radius: 20px;
+        padding: 25px 20px;
+        text-align: center;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 3px solid transparent;
+        min-height: 180px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .activity-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+            border-color: #7db8b3;
+        }
+
+        .activity-card.selected {
+            border-color: #7db8b3;
+            background: linear-gradient(135deg, #f8fdfc 0%, #e8f6f3 100%);
+            transform: translateY(-5px);
+        }
+
+    .activity-image {
+        width: 80px;
+        height: 80px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #7db8b3 0%, #62a3a8 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 35px;
+        color: white;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .activity-name {
+        font-size: 18px;
+        color: #333;
+        font-weight: 600;
+        margin: 0;
+        line-height: 1.2;
+        text-align: center;
+    }
+
+    .continue-btn {
+        background: linear-gradient(135deg, #7db8b3 0%, #62a3a8 100%);
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 18px 50px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: block;
+        margin: 50px auto 0 auto;
+        min-width: 200px;
+    }
+
+        .continue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(125, 184, 179, 0.3);
+        }
+
+        .continue-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+</style>
+
+<div class="main-content">
+    <div class="container">
+        <h2 class="selection-title">¿Qué tipo de actividades tienes<br>para ofrecer?</h2>
+
+        <div class="activities-grid">
+            <div class="activity-card" onclick="selectActivity(this, 'tour-bote')">
+                <div class="activity-image">
+                    <i class="fas fa-ship"></i>
+                </div>
+                <h3 class="activity-name">Tour en bote</h3>
+            </div>
+
+            <div class="activity-card" onclick="selectActivity(this, 'tour-lancha')">
+                <div class="activity-image">
+                    <i class="fas fa-anchor"></i>
+                </div>
+                <h3 class="activity-name">Tour en lancha</h3>
+            </div>
+
+            <div class="activity-card" onclick="selectActivity(this, 'tour-catamaran')">
+                <div class="activity-image">
+                    <i class="fas fa-ship"></i>
+                </div>
+                <h3 class="activity-name">Tour en<br>catamarán</h3>
+            </div>
+
+            <div class="activity-card" onclick="selectActivity(this, 'kayak')">
+                <div class="activity-image">
+                    <i class="fas fa-swimmer"></i>
+                </div>
+                <h3 class="activity-name">Kayak</h3>
+            </div>
+
+            <div class="activity-card" onclick="selectActivity(this, 'transporte')">
+                <div class="activity-image">
+                    <i class="fas fa-bus"></i>
+                </div>
+                <h3 class="activity-name">Transporte</h3>
+            </div>
+        </div>
+
+        <button class="continue-btn" id="continueBtn" disabled onclick="continueToNextStep()">
+            Siguiente
+        </button>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let selectedActivities = [];
+
+        function selectActivity(element, activity) {
+            // Toggle selection
+            if (element.classList.contains('selected')) {
+                element.classList.remove('selected');
+                selectedActivities = selectedActivities.filter(a => a !== activity);
+            } else {
+                element.classList.add('selected');
+                selectedActivities.push(activity);
+            }
+
+            // Enable/disable continue button
+            document.getElementById('continueBtn').disabled = selectedActivities.length === 0;
+        }
+
+        function continueToNextStep() {
+            if (selectedActivities.length > 0) {
+                // Guardar actividades seleccionadas
+                sessionStorage.setItem('actividadesSeleccionadas', JSON.stringify(selectedActivities));
+
+                // Redirigir al formulario de información específica para recreativos
+                window.location.href = '@Url.Action("FormularioActividades", "Home")';
+            }
+        }
+    </script>
+}

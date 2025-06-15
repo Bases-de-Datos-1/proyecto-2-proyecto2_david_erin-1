@@ -1,0 +1,232 @@
+﻿@{
+    ViewData["Title"] = "Información Específica - UTravel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .main-content {
+        background-color: #f8f9fa;
+        min-height: 100vh;
+        padding: 100px 0 150px 0;
+    }
+
+    .form-title {
+        font-size: 32px;
+        color: #333;
+        margin-bottom: 60px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .form-container {
+        max-width: 700px;
+        margin: 0 auto;
+        background: white;
+        padding: 50px;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+    }
+
+    .form-group {
+        margin-bottom: 35px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #333;
+        font-size: 16px;
+        min-width: 200px;
+        text-align: left;
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .form-control {
+        flex: 1;
+        padding: 12px 16px;
+        border: none;
+        border-bottom: 2px solid #e9ecef;
+        border-radius: 0;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+        background-color: transparent;
+        box-sizing: border-box;
+    }
+
+        .form-control:focus {
+            outline: none;
+            border-bottom-color: #7db8b3;
+            box-shadow: none;
+            background-color: transparent;
+        }
+
+        .form-control::placeholder {
+            color: #adb5bd;
+            font-weight: normal;
+            font-style: italic;
+        }
+
+    .siguiente-btn {
+        background: #666;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 12px 30px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 30px auto 0 auto;
+        display: block;
+    }
+
+        .siguiente-btn:hover {
+            background: #555;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .siguiente-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+    .container {
+        max-width: 900px;
+    }
+</style>
+
+<div class="main-content">
+    <div class="container">
+        <h2 class="form-title">Información Específica</h2>
+
+        <div class="form-container">
+            <form id="informacionRecreativos">
+                <div class="form-group">
+                    <label class="form-label" for="nombreEmpresa">
+                        Nombre de la empresa
+                    </label>
+                    <input type="text"
+                           class="form-control"
+                           id="nombreEmpresa"
+                           name="nombreEmpresa"
+                           placeholder="Ingrese el nombre de la empresa"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="cedulaJuridica">
+                        Cédula Jurídica
+                    </label>
+                    <input type="text"
+                           class="form-control"
+                           id="cedulaJuridica"
+                           name="cedulaJuridica"
+                           placeholder="Ingrese la cédula jurídica"
+                           pattern="[0-9]+"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="telefonos">
+                        Teléfonos
+                    </label>
+                    <input type="tel"
+                           class="form-control"
+                           id="telefonos"
+                           name="telefonos"
+                           placeholder="Ingrese el numero de telefono"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="correoElectronico">
+                        Correo Electrónico
+                    </label>
+                    <input type="email"
+                           class="form-control"
+                           id="correoElectronico"
+                           name="correoElectronico"
+                           placeholder="Ingrese el correo electronico"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="nombreContacto">
+                        Nombre del Contacto
+                    </label>
+                    <input type="text"
+                           class="form-control"
+                           id="nombreContacto"
+                           name="nombreContacto"
+                           placeholder="Ingrese el nombre del contacto"
+                           required>
+                </div>
+
+                <button type="button" class="siguiente-btn" onclick="continuarSiguientePaso()">
+                    Siguiente
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function continuarSiguientePaso() {
+            const form = document.getElementById('informacionRecreativos');
+
+            // Validar campos requeridos
+            if (form.checkValidity()) {
+                // Obtener los datos del formulario
+                const formData = new FormData(form);
+                const data = {};
+                for (let [key, value] of formData.entries()) {
+                    data[key] = value;
+                }
+
+                // Guardar temporalmente en sessionStorage para el siguiente paso
+                sessionStorage.setItem('informacionRecreativos', JSON.stringify(data));
+
+                // Redirigir al siguiente paso
+                window.location.href = '@Url.Action("DireccionActividad", "Home")';
+            } else {
+                // Mostrar errores de validación
+                form.reportValidity();
+            }
+        }
+
+        // Validación en tiempo real para habilitar/deshabilitar botón
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('informacionRecreativos');
+            const btn = document.querySelector('.siguiente-btn');
+
+            function validateForm() {
+                const requiredFields = form.querySelectorAll('input[required]');
+                let allValid = true;
+
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        allValid = false;
+                    }
+                });
+
+                btn.disabled = !allValid;
+            }
+
+            // Validar al escribir en los campos
+            form.addEventListener('input', validateForm);
+
+            // Validación inicial
+            validateForm();
+        });
+    </script>
+}

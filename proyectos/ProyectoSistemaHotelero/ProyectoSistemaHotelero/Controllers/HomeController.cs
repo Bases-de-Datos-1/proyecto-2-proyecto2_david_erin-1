@@ -33,7 +33,7 @@ namespace ProyectoSistemaHotelero.Controllers
             return View();
         }
 
-        public IActionResult RegistroRecreativos()
+        public IActionResult RegistroActividades()
         {
             return View();
         }
@@ -60,6 +60,30 @@ namespace ProyectoSistemaHotelero.Controllers
         {
             return View();
         }
+
+        public IActionResult FormularioActividades(string tipo)
+        {
+            ViewBag.TipoHospedaje = tipo;
+            return View();
+        }
+
+        public IActionResult DireccionActividad()
+        {
+            return View();
+        }
+        public IActionResult ServiciosActividad()
+        {
+            return View();
+        }
+        public IActionResult AcercaActividad()
+        {
+            return View();
+        }
+        public IActionResult ConfirmacionRegistro2()
+        {
+            return View();
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
