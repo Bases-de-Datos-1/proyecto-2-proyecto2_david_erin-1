@@ -59,6 +59,13 @@ namespace ProyectoSistemaHotelero.Controllers
         }
 
         [HttpGet]
+        public IActionResult CrearUsuarioAdminHotel()
+        {
+            // Esta vista se mostrará después de seleccionar los servicios
+            return View();
+        }
+
+        [HttpGet]
         public async Task<IActionResult> ConfirmacionRegistro()
         {
             // Aquí podrías cargar información adicional si es necesario
@@ -87,6 +94,10 @@ namespace ProyectoSistemaHotelero.Controllers
                 var serviciosIds = JsonSerializer.Deserialize<List<int>>(
                     data.GetProperty("servicios").ToString(),
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                
+                var usuarioAdmin = JsonSerializer.Deserialize<Dictionary<string, string>>(
+                    data.GetProperty("usuario").ToString(),
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                 // Mapear los datos a nuestro ViewModel
                 var viewModel = new RegistroHotelViewModel
@@ -107,9 +118,18 @@ namespace ProyectoSistemaHotelero.Controllers
                                  informacionEspecifica["urlSitioWeb"].ToString() : null
                     },
                     ServiciosSeleccionados = serviciosIds,
-                    Telefonos = new List<TelefonoViewModel>()
+                    Telefonos = new List<TelefonoViewModel>(),
+                    Usuario = new UsuarioSistemaHotelViewModel
+                    {
+                        Nombre = usuarioAdmin["nombre"],
+                        Apellido = usuarioAdmin["apellido"],
+                        Email = usuarioAdmin["email"],
+                        Contrasenia = usuarioAdmin["contrasenia"]
+                    }
                 };
 
+
+               
                 // Agregar teléfonos
                 if (informacionEspecifica.ContainsKey("telefono1"))
                 {

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace ProyectoSistemaHotelero.Models.ViewModels
 {
     public class RegistroHotelViewModel
@@ -6,6 +8,7 @@ namespace ProyectoSistemaHotelero.Models.ViewModels
         public List<int> ServiciosSeleccionados { get; set; } = new();
         public List<TelefonoViewModel> Telefonos { get; set; } = new();
         public List<RedSocialViewModel> RedesSociales { get; set; } = new();
+        public UsuarioSistemaHotelViewModel Usuario { get; set; } = new();
         
         // Listas para los dropdowns
         public List<TipoHotel> TiposHotel { get; set; } = new();

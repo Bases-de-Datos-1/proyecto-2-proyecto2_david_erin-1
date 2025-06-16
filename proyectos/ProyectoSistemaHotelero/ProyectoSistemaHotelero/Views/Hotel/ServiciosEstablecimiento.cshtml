@@ -186,8 +186,8 @@
             // Guardar en sessionStorage
             sessionStorage.setItem('serviciosDisponibles', JSON.stringify(serviciosSeleccionados));
 
-            // Redirigir al siguiente paso
-            window.location.href = '@Url.Action("ConfirmacionRegistro", "Hotel")';
+            // Redirigir al paso de creación de usuario administrador
+            window.location.href = '@Url.Action("CrearUsuarioAdminHotel", "Hotel")';
         }
 
         // Mantener el código para prevenir el toggle doble

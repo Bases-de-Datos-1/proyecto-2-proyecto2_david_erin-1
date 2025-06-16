@@ -115,6 +115,22 @@ namespace ProyectoSistemaHotelero.Services
                     await command.ExecuteNonQueryAsync();
                 }
                 
+                // Registrar usuario administrador
+                if (model.Usuario != null && !string.IsNullOrEmpty(model.Usuario.Email))
+                {
+                    using var command = new SqlCommand("sp_InsertarUsuarioSistemaRecreativo", connection, transaction);
+                    command.CommandType = CommandType.StoredProcedure;
+                    
+                    command.Parameters.AddWithValue("@Nombre", model.Usuario.Nombre);
+                    command.Parameters.AddWithValue("@Apellido", model.Usuario.Apellido);
+                    command.Parameters.AddWithValue("@Email", model.Usuario.Email);
+                    command.Parameters.AddWithValue("@Contrasenia", model.Usuario.Contrasenia);
+                    command.Parameters.AddWithValue("@TipoUsuario", "ADMIN");
+                    command.Parameters.AddWithValue("@CedulaJuridica", model.Actividad.CedulaJuridica);
+                    
+                    await command.ExecuteNonQueryAsync();
+                }
+                
                 // Confirmar la transacción
                 transaction.Commit();
                 return true;

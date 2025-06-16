@@ -92,8 +92,16 @@
                 
                 // Recopilar datos del sessionStorage
                 const informacionEspecifica = JSON.parse(sessionStorage.getItem('informacionEspecifica') || '{}');
+                const redesSociales = JSON.parse(sessionStorage.getItem('redesSociales') || '{}');
+                const direccionEstablecimiento = JSON.parse(sessionStorage.getItem('direccionEstablecimiento') || '{}');
+                const serviciosDisponibles = JSON.parse(sessionStorage.getItem('serviciosDisponibles') || '[]');
+                const usuarioAdmin = JSON.parse(sessionStorage.getItem('usuarioAdmin') || '{}');
+
                 console.log("Información específica:", informacionEspecifica);
-                
+                console.log("Dirección:", direccionEstablecimiento);
+                console.log("Servicios:", serviciosDisponibles);
+                console.log("Usuario administrador:", usuarioAdmin);
+
                 // Procesar los teléfonos guardados como array
                 if (informacionEspecifica.telefonos && Array.isArray(informacionEspecifica.telefonos)) {
                     const telefonos = informacionEspecifica.telefonos;
@@ -108,19 +116,13 @@
                     });
                 }
 
-                const redesSociales = JSON.parse(sessionStorage.getItem('redesSociales') || '{}');
-                const direccionEstablecimiento = JSON.parse(sessionStorage.getItem('direccionEstablecimiento') || '{}');
-                const serviciosDisponibles = JSON.parse(sessionStorage.getItem('serviciosDisponibles') || '[]');
-
-                console.log("Dirección:", direccionEstablecimiento);
-                console.log("Servicios:", serviciosDisponibles);
-
                 // Crear objeto con toda la información
                 const registroCompleto = {
                     informacionEspecifica: informacionEspecifica,
                     redesSociales: redesSociales,
                     direccion: direccionEstablecimiento,
                     servicios: serviciosDisponibles,
+                    usuario: usuarioAdmin,
                     fechaRegistro: new Date().toISOString()
                 };
 
@@ -160,6 +162,7 @@
                         sessionStorage.removeItem('redesSociales');
                         sessionStorage.removeItem('direccionEstablecimiento');
                         sessionStorage.removeItem('serviciosDisponibles');
+                        sessionStorage.removeItem('usuarioAdmin');
 
                         // Redirigir a la página principal
                         window.location.href = '@Url.Action("Index", "Home")';

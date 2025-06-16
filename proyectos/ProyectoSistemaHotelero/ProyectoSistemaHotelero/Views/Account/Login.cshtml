@@ -1,0 +1,174 @@
+@model ProyectoSistemaHotelero.Models.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Iniciar Sesión - UTravel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .main-content {
+        background-color: #f8f9fa;
+        min-height: 100vh;
+        padding: 120px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .login-container {
+        max-width: 450px;
+        margin: 0 auto;
+        background: white;
+        padding: 40px 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .login-title {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 30px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 500;
+        color: #333;
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #62B1B1;
+        box-shadow: 0 0 0 3px rgba(98, 177, 177, 0.1);
+    }
+
+    .form-control::placeholder {
+        color: #adb5bd;
+    }
+
+    .login-btn {
+        background: #62B1B1;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 14px 20px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .login-btn:hover {
+        background: #4A9C9C;
+    }
+
+    .forgot-password {
+        display: block;
+        text-align: right;
+        margin-top: 5px;
+        color: #62B1B1;
+        font-size: 14px;
+        text-decoration: none;
+    }
+
+    .register-link {
+        text-align: center;
+        margin-top: 25px;
+        color: #666;
+        font-size: 14px;
+    }
+
+    .register-link a {
+        color: #62B1B1;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .validation-summary {
+        color: #dc3545;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+</style>
+
+<div class="main-content">
+    <div class="container">
+        <div class="login-container">
+            <h2 class="login-title">Iniciar Sesión</h2>
+
+            @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+            {
+                <div class="validation-summary">
+                    @ViewBag.ErrorMessage
+                </div>
+            }
+
+            <form method="post" asp-action="Login" asp-controller="Account">
+                @Html.AntiForgeryToken()
+                
+                <div class="form-group">
+                    <label asp-for="Email" class="form-label">Correo electrónico</label>
+                    <input asp-for="Email" type="email" class="form-control" placeholder="Ingrese su correo electrónico" required>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="Password" class="form-label">Contraseña</label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Ingrese su contraseña" required>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <a href="#" class="forgot-password">¿Olvidó su contraseña?</a>
+                </div>
+
+                <div class="form-check mb-3 mt-3">
+                    <input asp-for="RememberMe" type="checkbox" class="form-check-input">
+                    <label asp-for="RememberMe" class="form-check-label">Recordarme en este dispositivo</label>
+                </div>
+
+                <button type="submit" class="login-btn">Iniciar Sesión</button>
+
+                <div class="register-link">
+                    ¿No tiene una cuenta? <a asp-action="Registro" asp-controller="Account">Regístrese aquí</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Escuchar envío del formulario para validación del lado del cliente
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                const email = document.getElementById('Email').value;
+                const password = document.getElementById('Password').value;
+                
+                if (!email || !password) {
+                    e.preventDefault();
+                    alert('Por favor complete todos los campos requeridos');
+                }
+            });
+        });
+    </script>
+}

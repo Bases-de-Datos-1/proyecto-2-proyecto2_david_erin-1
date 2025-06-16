@@ -96,6 +96,7 @@
                 const serviciosActividad = JSON.parse(sessionStorage.getItem('ServiciosActividad') || '[]');
                 const acercaActividad = JSON.parse(sessionStorage.getItem('acercaActividad') || '{}');
                 const direccionActividad = JSON.parse(sessionStorage.getItem('direccionActividad') || '{}');
+                const usuarioAdmin = JSON.parse(sessionStorage.getItem('usuarioAdminRecreativo') || '{}');
 
                 // Verificar que todos los datos necesarios estén disponibles
                 if (!acercaActividad.precio || !acercaActividad.descripcion) {
@@ -126,6 +127,7 @@
                     direccion: direccionActividad,
                     tiposActividad: tiposActividad,
                     servicios: serviciosActividad,
+                    usuario: usuarioAdmin,
                     fechaRegistro: new Date().toISOString()
                 };
 
@@ -168,6 +170,7 @@
                         sessionStorage.removeItem('serviciosActividad');
                         sessionStorage.removeItem('acercaActividad');
                         sessionStorage.removeItem('direccionActividad');
+						sessionStorage.removeItem('usuarioAdminRecreativo');
 
                         // Redirigir a la página principal
                         window.location.href = '@Url.Action("Index", "Home")';

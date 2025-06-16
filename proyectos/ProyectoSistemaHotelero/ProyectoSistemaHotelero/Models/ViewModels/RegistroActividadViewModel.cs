@@ -5,6 +5,7 @@ namespace ProyectoSistemaHotelero.Models.ViewModels
         public EmpresaActividad Actividad { get; set; } = new();
         public List<int> TiposActividadSeleccionados { get; set; } = new();
         public List<int> ServiciosSeleccionados { get; set; } = new();
+        public UsuarioSistemaRecreativoViewModel Usuario { get; set; } = new();
         
         // Listas para los dropdowns
         public List<TipoActividad> TiposActividad { get; set; } = new();

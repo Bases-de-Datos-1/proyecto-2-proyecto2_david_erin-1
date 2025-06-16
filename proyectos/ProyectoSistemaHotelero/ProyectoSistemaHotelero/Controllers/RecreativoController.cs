@@ -48,11 +48,20 @@ namespace ProyectoSistemaHotelero.Controllers
         }
 
         [HttpGet]
+        public IActionResult CrearUsuarioAdminRecreativo()
+        {
+            // Esta vista se mostrará después de seleccionar los servicios
+            return View();
+        }
+
+
+        [HttpGet]
         public async Task<IActionResult> ConfirmacionRegistro2()
         {
             return View();
         }
 
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RegistrarActividad([FromBody] JsonElement data)
@@ -63,19 +72,22 @@ namespace ProyectoSistemaHotelero.Controllers
                 var informacionEspecifica = JsonSerializer.Deserialize<Dictionary<string, object>>(
                     data.GetProperty("informacionEspecifica").ToString(),
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                
+
                 var direccion = JsonSerializer.Deserialize<Dictionary<string, string>>(
                     data.GetProperty("direccion").ToString(),
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                
+
                 var tiposActividadIds = JsonSerializer.Deserialize<List<int>>(
                     data.GetProperty("tiposActividad").ToString(),
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                
+
                 var serviciosIds = JsonSerializer.Deserialize<List<int>>(
                     data.GetProperty("servicios").ToString(),
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-             
+
+                var usuarioAdmin = JsonSerializer.Deserialize<Dictionary<string, string>>(
+                    data.GetProperty("usuario").ToString(),
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                 // Mapear los datos a nuestro ViewModel
                 var viewModel = new RegistroActividadViewModel
@@ -95,7 +107,14 @@ namespace ProyectoSistemaHotelero.Controllers
                         Descripcion = informacionEspecifica["descripcion"].ToString(), // Obtener descripción de informacionEspecifica
                     },
                     TiposActividadSeleccionados = tiposActividadIds,
-                    ServiciosSeleccionados = serviciosIds
+                    ServiciosSeleccionados = serviciosIds,
+                    Usuario = new UsuarioSistemaRecreativoViewModel
+                    {
+                        Nombre = usuarioAdmin["nombre"],
+                        Apellido = usuarioAdmin["apellido"],
+                        Email = usuarioAdmin["email"],
+                        Contrasenia = usuarioAdmin["contrasenia"]
+                    }
                 };
 
                 // Registrar en la base de datos
@@ -103,11 +122,11 @@ namespace ProyectoSistemaHotelero.Controllers
                 
                 if (result)
                 {
-                    return Json(new { success = true, message = "Actividad registrada exitosamente" });
+                    return Json(new { success = true, message = "Actividad recreativa registrada exitosamente" });
                 }
                 else
                 {
-                    return Json(new { success = false, message = "Error al registrar la actividad" });
+                    return Json(new { success = false, message = "Error al registrar la actividad recreativa" });
                 }
             }
             catch (Exception ex)

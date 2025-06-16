@@ -1,0 +1,152 @@
+
+@{
+    ViewData["Title"] = "Crear Usuario Administrador - UTravel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .main-content {
+        background-color: #f8f9fa;
+        min-height: 100vh;
+        padding: 100px 0 150px 0;
+    }
+
+    .form-title {
+        font-size: 32px;
+        color: #333;
+        margin-bottom: 60px;
+        font-weight: 600;
+        text-align: center;
+        line-height: 1.3;
+    }
+
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        padding: 50px;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+    }
+
+    .form-group {
+        margin-bottom: 30px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .siguiente-btn {
+        background: #666;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 12px 30px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 30px auto 0 auto;
+        display: block;
+    }
+
+    .siguiente-btn:hover {
+        background: #555;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .container {
+        max-width: 900px;
+    }
+</style>
+
+<div class="main-content">
+    <div class="container">
+        <h2 class="form-title">Crear Usuario Administrador</h2>
+
+        <div class="form-container">
+            <form id="usuarioForm">
+                <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="apellido" class="form-label">Apellido</label>
+                    <input type="text" id="apellido" name="apellido" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="contrasenia" class="form-label">Contraseña</label>
+                    <input type="password" id="contrasenia" name="contrasenia" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmarContrasenia" class="form-label">Confirmar Contraseña</label>
+                    <input type="password" id="confirmarContrasenia" name="confirmarContrasenia" class="form-control" required>
+                </div>
+
+                <button type="button" class="siguiente-btn" onclick="guardarUsuarioAdmin()">
+                    Siguiente
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function guardarUsuarioAdmin() {
+            const nombre = document.getElementById('nombre').value;
+            const apellido = document.getElementById('apellido').value;
+            const email = document.getElementById('email').value;
+            const contrasenia = document.getElementById('contrasenia').value;
+            const confirmarContrasenia = document.getElementById('confirmarContrasenia').value;
+
+            // Validación básica
+            if (!nombre || !apellido || !email || !contrasenia) {
+                alert('Por favor, complete todos los campos.');
+                return;
+            }
+
+            if (contrasenia !== confirmarContrasenia) {
+                alert('Las contraseñas no coinciden.');
+                return;
+            }
+
+            // Validación de email
+            
+            
+
+            // Guardar en sessionStorage
+            sessionStorage.setItem('usuarioAdminRecreativo', JSON.stringify({
+                nombre: nombre,
+                apellido: apellido,
+                email: email,
+                contrasenia: contrasenia
+            }));
+
+            // Redirigir al siguiente paso
+            window.location.href = '@Url.Action("ConfirmacionRegistro2", "Recreativo")';
+        }
+    </script>
+}

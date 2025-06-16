@@ -1,0 +1,222 @@
+@{
+    ViewData["Title"] = "Completar Registro - UTravel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+
+<style>
+    .main-content {
+        background-color: #f8f9fa;
+        min-height: 100vh;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .confirmation-container {
+        max-width: 700px;
+        margin: 0 auto;
+        background: white;
+        padding: 60px 50px;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+        text-align: left;
+    }
+
+    .confirmation-title {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 30px;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    .confirmation-description {
+        font-size: 16px;
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 40px;
+    }
+
+    .resumen-datos {
+        margin-bottom: 40px;
+    }
+
+    .resumen-datos h3 {
+        font-size: 18px;
+        color: #333;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .resumen-datos p {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 5px;
+    }
+
+    .dato-label {
+        font-weight: 600;
+    }
+
+    .confirmar-btn {
+        background: #666;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 12px 30px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .confirmar-btn:hover {
+        background: #555;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+</style>
+
+<div class="main-content">
+    <div class="container">
+        <div class="confirmation-container">
+            <h2 class="confirmation-title">
+                Confirmación de Registro
+            </h2>
+
+            <p class="confirmation-description">
+                Por favor, verifique que la información proporcionada es correcta antes de confirmar su registro.
+            </p>
+
+            <div class="resumen-datos">
+                <h3>Información Personal</h3>
+                <div id="resumen-info-personal">
+                    <!-- Se llenará con JavaScript -->
+                </div>
+            </div>
+
+            <button type="button" class="confirmar-btn" onclick="confirmarRegistro()">
+                Confirmar Registro
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Recuperar la información del sessionStorage
+            const informacionPersonal = JSON.parse(sessionStorage.getItem('informacionPersonal') || '{}');
+            
+            if (Object.keys(informacionPersonal).length === 0) {
+                window.location.href = '@Url.Action("Registro", "Account")';
+                return;
+            }
+            
+            // Mostrar resumen de datos
+            const resumenInfoPersonal = document.getElementById('resumen-info-personal');
+            
+            // Mapeo para textos más descriptivos
+            const tiposIdentificacion = {
+                'cedula': 'Cédula de identidad',
+                'pasaporte': 'Pasaporte',
+                'residencia': 'Cédula de residencia'
+            };
+            
+            // Crear HTML con la información
+            resumenInfoPersonal.innerHTML = `
+                <p><span class="dato-label">Nombre completo:</span> ${informacionPersonal.nombreCompleto || ''}</p>
+                <p><span class="dato-label">Fecha de nacimiento:</span> ${formatDate(informacionPersonal.fechaNacimiento) || ''}</p>
+                <p><span class="dato-label">Tipo de identificación:</span> ${tiposIdentificacion[informacionPersonal.tipoIdentificacion] || informacionPersonal.tipoIdentificacion || ''}</p>
+                <p><span class="dato-label">Número de identificación:</span> ${informacionPersonal.numeroIdentificacion || ''}</p>
+                <p><span class="dato-label">País de residencia:</span> ${informacionPersonal.paisResidencia || ''}</p>
+                <p><span class="dato-label">Dirección:</span> ${informacionPersonal.direccion || ''}</p>
+                <p><span class="dato-label">Teléfono principal:</span> ${(informacionPersonal.codigoTelefono1 || '') + ' ' + (informacionPersonal.telefono1 || '')}</p>
+                ${informacionPersonal.telefono2 ? `<p><span class="dato-label">Teléfono secundario:</span> ${(informacionPersonal.codigoTelefono2 || '') + ' ' + (informacionPersonal.telefono2 || '')}</p>` : ''}
+                ${informacionPersonal.telefono3 ? `<p><span class="dato-label">Teléfono adicional:</span> ${(informacionPersonal.codigoTelefono3 || '') + ' ' + (informacionPersonal.telefono3 || '')}</p>` : ''}
+                <p><span class="dato-label">Correo electrónico:</span> ${informacionPersonal.correoElectronico || ''}</p>
+            `;
+        });
+        
+        // Función para formatear fechas
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
+        
+        function confirmarRegistro() {
+            try {
+                console.log("Iniciando proceso de registro...");
+
+                // Obtener el token CSRF
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                if (!token) {
+                    console.error("No se encontró el token CSRF");
+                    alert("Error: No se encontró el token de seguridad necesario.");
+                    return;
+                }
+
+                // Recopilar datos del sessionStorage
+                const informacionPersonal = JSON.parse(sessionStorage.getItem('informacionPersonal') || '{}');
+
+                if (Object.keys(informacionPersonal).length === 0) {
+                    alert("No se encontró información personal para el registro.");
+                    return;
+                }
+
+                console.log("Enviando datos al servidor...");
+                // Enviar datos al servidor
+                fetch('@Url.Action("RegistrarCliente", "Account")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': token
+                    },
+                    body: JSON.stringify({
+                        informacionPersonal: informacionPersonal
+                    })
+                })
+                .then(response => {
+                    console.log("Respuesta recibida:", response);
+                    if (!response.ok) {
+                        throw new Error(`Error HTTP: ${response.status} ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Datos recibidos:", data);
+                    if (data.success) {
+                        // Mostrar mensaje de éxito
+                        alert('¡Registro completado exitosamente!');
+
+                        // Limpiar sessionStorage
+                        sessionStorage.removeItem('informacionPersonal');
+
+                        // MODIFICADO: Refrescar la página antes de redirigir para actualizar el estado de autenticación
+                        window.location.href = '@Url.Action("Index", "Home")';
+                    } else {
+                        alert('Error al registrar: ' + (data.message || "Error desconocido"));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Ocurrió un error al procesar la solicitud: ' + error.message);
+                });
+            } catch (ex) {
+                console.error("Error general:", ex);
+                alert("Ocurrió un error inesperado: " + ex.message);
+            }
+        }
+    </script>
+}

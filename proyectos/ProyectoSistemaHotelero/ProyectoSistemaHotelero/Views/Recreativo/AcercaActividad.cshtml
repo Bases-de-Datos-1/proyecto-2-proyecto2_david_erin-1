@@ -176,7 +176,7 @@
                 sessionStorage.setItem('acercaActividad', JSON.stringify(data));
 
                 // Redirigir al siguiente paso
-                window.location.href = '@Url.Action("ConfirmacionRegistro2", "Recreativo")';
+                window.location.href = '@Url.Action("CrearUsuarioAdminRecreativo", "Recreativo")';
             } else {
                 // Mostrar errores de validación
                 form.reportValidity();
