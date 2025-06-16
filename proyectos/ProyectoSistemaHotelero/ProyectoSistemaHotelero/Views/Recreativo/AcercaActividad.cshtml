@@ -1,13 +1,13 @@
 ﻿@{
-    ViewData["Title"] = "Información Específica - UTravel";
+    ViewData["Title"] = "Acerca de la Actividad - UTravel";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
     .main-content {
         background-color: #f8f9fa;
-        min-height: calc(100vh - 200px); 
-        padding: 100px 0 80px 0;
+        min-height: 100vh;
+        padding: 100px 0 150px 0;
     }
 
     .form-title {
@@ -31,9 +31,13 @@
     .form-group {
         margin-bottom: 35px;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 20px;
     }
+
+        .form-group.textarea-group {
+            align-items: flex-start;
+        }
 
     .form-label {
         display: block;
@@ -43,6 +47,7 @@
         min-width: 200px;
         text-align: left;
         margin: 0;
+        padding-top: 12px;
     }
 
     .form-control {
@@ -55,6 +60,7 @@
         transition: border-color 0.3s ease;
         background-color: transparent;
         box-sizing: border-box;
+        resize: none;
     }
 
         .form-control:focus {
@@ -68,6 +74,19 @@
             color: #adb5bd;
             font-weight: normal;
             font-style: italic;
+        }
+
+    .form-textarea {
+        min-height: 100px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 15px;
+        font-family: inherit;
+    }
+
+        .form-textarea:focus {
+            border-color: #7db8b3;
+            box-shadow: 0 0 0 3px rgba(125, 184, 179, 0.1);
         }
 
     .siguiente-btn {
@@ -104,68 +123,31 @@
 
 <div class="main-content">
     <div class="container">
-        <h2 class="form-title">Información Específica</h2>
+        <h2 class="form-title">Acerca de la actividad</h2>
 
         <div class="form-container">
-            <form id="informacionForm">
+            <form id="acercaActividadForm">
+                <div class="form-group textarea-group">
+                    <label class="form-label" for="descripcion">
+                        Descripción
+                    </label>
+                    <textarea class="form-control form-textarea"
+                              id="descripcion"
+                              name="descripcion"
+                              placeholder="Ingrese una breve descripción de la actividad"
+                              required></textarea>
+                </div>
+
                 <div class="form-group">
-                    <label class="form-label" for="nombreEstablecimiento">
-                        Nombre del establecimiento
+                    <label class="form-label" for="precio">
+                        Precio
                     </label>
                     <input type="text"
                            class="form-control"
-                           id="nombreEstablecimiento"
-                           name="nombreEstablecimiento"
-                           placeholder="Ingrese el nombre del establecimiento"
+                           id="precio"
+                           name="precio"
+                           placeholder="Ingrese el precio de la actividad"
                            required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="cedulaJuridica">
-                        Cédula Jurídica
-                    </label>
-                    <input type="text"
-                           class="form-control"
-                           id="cedulaJuridica"
-                           name="cedulaJuridica"
-                           placeholder="Ingrese la cédula jurídica"
-                           pattern="[0-9]+"
-                           required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="telefonos">
-                        Teléfonos
-                    </label>
-                    <input type="tel"
-                           class="form-control"
-                           id="telefonos"
-                           name="telefonos"
-                           placeholder="Ingrese los teléfonos de contacto"
-                           required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="correoElectronico">
-                        Correo Electrónico
-                    </label>
-                    <input type="email"
-                           class="form-control"
-                           id="correoElectronico"
-                           name="correoElectronico"
-                           placeholder="Ingrese el correo electrónico"
-                           required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="urlSitioWeb">
-                        URL Sitio Web (opcional)
-                    </label>
-                    <input type="url"
-                           class="form-control"
-                           id="urlSitioWeb"
-                           name="urlSitioWeb"
-                           placeholder="Ingrese la URL del sitio web">
                 </div>
 
                 <button type="button" class="siguiente-btn" onclick="continuarSiguientePaso()">
@@ -179,7 +161,7 @@
 @section Scripts {
     <script>
         function continuarSiguientePaso() {
-            const form = document.getElementById('informacionForm');
+            const form = document.getElementById('acercaActividadForm');
 
             // Validar campos requeridos
             if (form.checkValidity()) {
@@ -191,10 +173,10 @@
                 }
 
                 // Guardar temporalmente en sessionStorage para el siguiente paso
-                sessionStorage.setItem('informacionEspecifica', JSON.stringify(data));
+                sessionStorage.setItem('acercaActividad', JSON.stringify(data));
 
                 // Redirigir al siguiente paso
-                window.location.href = '@Url.Action("DetallesHospedaje", "Home")';
+                window.location.href = '@Url.Action("ConfirmacionRegistro2", "Recreativo")';
             } else {
                 // Mostrar errores de validación
                 form.reportValidity();
@@ -203,11 +185,11 @@
 
         // Validación en tiempo real para habilitar/deshabilitar botón
         document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('informacionForm');
+            const form = document.getElementById('acercaActividadForm');
             const btn = document.querySelector('.siguiente-btn');
 
             function validateForm() {
-                const requiredFields = form.querySelectorAll('input[required]');
+                const requiredFields = form.querySelectorAll('input[required], textarea[required]');
                 let allValid = true;
 
                 requiredFields.forEach(field => {

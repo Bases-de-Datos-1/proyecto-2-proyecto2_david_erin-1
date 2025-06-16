@@ -1,0 +1,180 @@
+﻿@{
+    ViewData["Title"] = "Registro Completado - UTravel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+
+<style>
+    .main-content {
+        background-color: #f8f9fa;
+        min-height: 100vh;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .confirmation-container {
+        max-width: 700px;
+        margin: 0 auto;
+        background: white;
+        padding: 60px 50px;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+        text-align: left;
+    }
+
+    .confirmation-title {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 30px;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    .confirmation-description {
+        font-size: 16px;
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 40px;
+    }
+
+    .publicar-btn {
+        background: #666;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 12px 30px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+        .publicar-btn:hover {
+            background: #555;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+    .container {
+        max-width: 900px;
+    }
+</style>
+
+<div class="main-content">
+    <div class="container">
+        <div class="confirmation-container">
+            <h2 class="confirmation-title">
+                Toda la información ha sido<br>
+                recopilada satisfactoriamente!
+            </h2>
+
+            <p class="confirmation-description">
+                La información puede ser editada en la sección de sus hospedajes en caso de necesitarlo posteriormente
+            </p>
+
+            <button type="button" class="publicar-btn" onclick="publicarNegocio()">
+                Publicar mi negocio
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function publicarNegocio() {
+            try {
+                console.log("Iniciando proceso de publicación...");
+                
+                // Recopilar datos del sessionStorage
+                const informacionEspecifica = JSON.parse(sessionStorage.getItem('informacionEspecifica') || '{}');
+                console.log("Información específica:", informacionEspecifica);
+                
+                // Procesar los teléfonos guardados como array
+                if (informacionEspecifica.telefonos && Array.isArray(informacionEspecifica.telefonos)) {
+                    const telefonos = informacionEspecifica.telefonos;
+                    delete informacionEspecifica.telefonos;
+                    
+                    telefonos.forEach((tel, index) => {
+                        const num = index + 1;
+                        if (num <= 3) {
+                            informacionEspecifica[`telefono${num}`] = tel;
+                            informacionEspecifica[`codigoTelefono${num}`] = "+506";
+                        }
+                    });
+                }
+
+                const redesSociales = JSON.parse(sessionStorage.getItem('redesSociales') || '{}');
+                const direccionEstablecimiento = JSON.parse(sessionStorage.getItem('direccionEstablecimiento') || '{}');
+                const serviciosDisponibles = JSON.parse(sessionStorage.getItem('serviciosDisponibles') || '[]');
+
+                console.log("Dirección:", direccionEstablecimiento);
+                console.log("Servicios:", serviciosDisponibles);
+
+                // Crear objeto con toda la información
+                const registroCompleto = {
+                    informacionEspecifica: informacionEspecifica,
+                    redesSociales: redesSociales,
+                    direccion: direccionEstablecimiento,
+                    servicios: serviciosDisponibles,
+                    fechaRegistro: new Date().toISOString()
+                };
+
+                // Obtener el token CSRF
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                if (!token) {
+                    console.error("No se encontró el token CSRF");
+                    alert("Error: No se encontró el token de seguridad necesario.");
+                    return;
+                }
+
+                console.log("Enviando datos al servidor...");
+                // Enviar datos al servidor
+                fetch('@Url.Action("RegistrarHotel", "Hotel")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': token
+                    },
+                    body: JSON.stringify(registroCompleto)
+                })
+                .then(response => {
+                    console.log("Respuesta recibida:", response);
+                    if (!response.ok) {
+                        throw new Error(`Error HTTP: ${response.status} ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Datos recibidos:", data);
+                    if (data.success) {
+                        // Mostrar mensaje de éxito
+                        alert('¡Negocio publicado exitosamente!');
+
+                        // Limpiar sessionStorage
+                        sessionStorage.removeItem('informacionEspecifica');
+                        sessionStorage.removeItem('redesSociales');
+                        sessionStorage.removeItem('direccionEstablecimiento');
+                        sessionStorage.removeItem('serviciosDisponibles');
+
+                        // Redirigir a la página principal
+                        window.location.href = '@Url.Action("Index", "Home")';
+                    } else {
+                        alert('Error al registrar: ' + (data.message || "Error desconocido"));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Ocurrió un error al procesar la solicitud: ' + error.message);
+                });
+            } catch (ex) {
+                console.error("Error general:", ex);
+                alert("Ocurrió un error inesperado: " + ex.message);
+            }
+        }
+    </script>
+}

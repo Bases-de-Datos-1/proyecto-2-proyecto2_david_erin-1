@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<RedSocial>
+@{
     ViewData["Title"] = "Redes Sociales - UTravel";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -125,82 +126,21 @@
 
         <div class="form-container">
             <form id="redesSocialesForm">
-                <div class="form-group">
-                    <label class="form-label" for="facebook">
-                        <i class="fab fa-facebook social-icon"></i>Facebook
-                    </label>
-                    <input type="text"
-                           class="form-control"
-                           id="facebook"
-                           name="facebook"
-                           placeholder="Ingrese su nombre de usuario de Facebook">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="instagram">
-                        <i class="fab fa-instagram social-icon"></i>Instagram
-                    </label>
-                    <input type="text"
-                           class="form-control"
-                           id="instagram"
-                           name="instagram"
-                           placeholder="Ingrese su nombre de usuario de Instagram">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="youtube">
-                        <i class="fab fa-youtube social-icon"></i>Youtube
-                    </label>
-                    <input type="text"
-                           class="form-control"
-                           id="youtube"
-                           name="youtube"
-                           placeholder="Ingrese su nombre de usuario de Youtube">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="tiktok">
-                        <i class="fab fa-tiktok social-icon"></i>Tiktok
-                    </label>
-                    <input type="text"
-                           class="form-control"
-                           id="tiktok"
-                           name="tiktok"
-                           placeholder="Ingrese su nombre de usuario de Tiktok">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="airbnb">
-                        <i class="fas fa-home social-icon"></i>Airbnb
-                    </label>
-                    <input type="text"
-                           class="form-control"
-                           id="airbnb"
-                           name="airbnb"
-                           placeholder="Ingrese su nombre de usuario de Airbnb">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="threads">
-                        <i class="fas fa-at social-icon"></i>Threads
-                    </label>
-                    <input type="text"
-                           class="form-control"
-                           id="threads"
-                           name="threads"
-                           placeholder="Ingrese su nombre de usuario de Threads">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="x">
-                        <i class="fab fa-twitter social-icon"></i>X
-                    </label>
-                    <input type="text"
-                           class="form-control"
-                           id="x"
-                           name="x"
-                           placeholder="Ingrese su nombre de usuario de X">
-                </div>
+                @foreach (var redSocial in Model)
+                {
+                    var idNombre = redSocial.Nombre.ToLower().Replace(" ", "");
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="@idNombre">
+                            <i class="@GetIconForSocialMedia(redSocial.Nombre) social-icon"></i>@redSocial.Nombre
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               id="@idNombre"
+                               name="@idNombre"
+                               placeholder="Ingrese su nombre de usuario de @redSocial.Nombre">
+                    </div>
+                }
 
                 <button type="button" class="siguiente-btn" onclick="continuarSiguientePaso()">
                     Siguiente
@@ -209,6 +149,32 @@
         </div>
     </div>
 </div>
+
+@functions {
+    public string GetIconForSocialMedia(string socialMediaName)
+    {
+        // Mapea nombres de redes sociales a clases de iconos FontAwesome
+        return socialMediaName.ToLower() switch
+        {
+            var name when name.Contains("facebook") => "fab fa-facebook",
+            var name when name.Contains("instagram") => "fab fa-instagram",
+            var name when name.Contains("youtube") => "fab fa-youtube",
+            var name when name.Contains("tiktok") => "fab fa-tiktok",
+            var name when name.Contains("airbnb") => "fas fa-home",
+            var name when name.Contains("thread") => "fas fa-at",
+            var name when name.Contains("twitter") => "fab fa-twitter",
+            var name when name.Contains("x") && name.Length < 3 => "fab fa-twitter",
+            var name when name.Contains("linkedin") => "fab fa-linkedin",
+            var name when name.Contains("pinterest") => "fab fa-pinterest",
+            var name when name.Contains("snapchat") => "fab fa-snapchat",
+            var name when name.Contains("telegram") => "fab fa-telegram",
+            var name when name.Contains("whatsapp") => "fab fa-whatsapp",
+            var name when name.Contains("discord") => "fab fa-discord",
+            var name when name.Contains("spotify") => "fab fa-spotify",
+            _ => "fas fa-globe" // Icono predeterminado para redes sociales no específicas
+        };
+    }
+}
 
 @section Scripts {
     <script>
@@ -229,7 +195,7 @@
             sessionStorage.setItem('redesSociales', JSON.stringify(data));
 
             // Redirigir al siguiente paso (sin validación, siempre permitir continuar)
-            window.location.href = '@Url.Action("DireccionEstablecimiento", "Home")';
+            window.location.href = '@Url.Action("DireccionEstablecimiento", "Hotel")';
         }
     </script>
 }

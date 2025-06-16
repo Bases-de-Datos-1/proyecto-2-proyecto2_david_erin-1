@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<Servicio>
+@{
     ViewData["Title"] = "Servicios Disponibles - UTravel";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -119,69 +120,17 @@
         <div class="services-container">
             <form id="serviciosForm">
                 <div class="services-grid">
-                    <div class="service-item" onclick="toggleService(this, 'telefono')">
-                        <input type="checkbox" class="service-checkbox" id="telefono" name="servicios" value="telefono">
-                        <div class="service-icon">
-                            <i class="fas fa-phone"></i>
+                    @foreach (var servicio in Model)
+                    {
+                        <div class="service-item" onclick="toggleService(this, @servicio.ServicioID)">
+                            <input type="checkbox" class="service-checkbox" id="servicio-@servicio.ServicioID" 
+                                   name="servicios" value="@servicio.ServicioID">
+                            <div class="service-icon">
+                                <i class="@GetIconForService(servicio.Nombre)"></i>
+                            </div>
+                            <div class="service-label">@servicio.Nombre</div>
                         </div>
-                        <div class="service-label">Teléfono</div>
-                    </div>
-
-                    <div class="service-item" onclick="toggleService(this, 'wifi')">
-                        <input type="checkbox" class="service-checkbox" id="wifi" name="servicios" value="wifi">
-                        <div class="service-icon">
-                            <i class="fas fa-wifi"></i>
-                        </div>
-                        <div class="service-label">WiFi</div>
-                    </div>
-
-                    <div class="service-item" onclick="toggleService(this, 'lavadora')">
-                        <input type="checkbox" class="service-checkbox" id="lavadora" name="servicios" value="lavadora">
-                        <div class="service-icon">
-                            <i class="fas fa-tshirt"></i>
-                        </div>
-                        <div class="service-label">Lavadora</div>
-                    </div>
-
-                    <div class="service-item" onclick="toggleService(this, 'balcon')">
-                        <input type="checkbox" class="service-checkbox" id="balcon" name="servicios" value="balcon">
-                        <div class="service-icon">
-                            <i class="fas fa-building"></i>
-                        </div>
-                        <div class="service-label">Balcón</div>
-                    </div>
-
-                    <div class="service-item" onclick="toggleService(this, 'restaurante')">
-                        <input type="checkbox" class="service-checkbox" id="restaurante" name="servicios" value="restaurante">
-                        <div class="service-icon">
-                            <i class="fas fa-utensils"></i>
-                        </div>
-                        <div class="service-label">Restaurante</div>
-                    </div>
-
-                    <div class="service-item" onclick="toggleService(this, 'aire')">
-                        <input type="checkbox" class="service-checkbox" id="aire" name="servicios" value="aire">
-                        <div class="service-icon">
-                            <i class="fas fa-snowflake"></i>
-                        </div>
-                        <div class="service-label">Aire<br>Acondicionado</div>
-                    </div>
-
-                    <div class="service-item" onclick="toggleService(this, 'piscina')">
-                        <input type="checkbox" class="service-checkbox" id="piscina" name="servicios" value="piscina">
-                        <div class="service-icon">
-                            <i class="fas fa-swimmer"></i>
-                        </div>
-                        <div class="service-label">Piscina</div>
-                    </div>
-
-                    <div class="service-item" onclick="toggleService(this, 'patio')">
-                        <input type="checkbox" class="service-checkbox" id="patio" name="servicios" value="patio">
-                        <div class="service-icon">
-                            <i class="fas fa-tree"></i>
-                        </div>
-                        <div class="service-label">Patio</div>
-                    </div>
+                    }
                 </div>
 
                 <button type="button" class="siguiente-btn" onclick="continuarSiguientePaso()">
@@ -192,10 +141,29 @@
     </div>
 </div>
 
+@functions {
+    public string GetIconForService(string serviceName)
+    {
+        // Mapea nombres de servicios a clases de iconos FontAwesome
+        return serviceName.ToLower() switch
+        {
+            var name when name.Contains("teléfono") => "fas fa-phone",
+            var name when name.Contains("wifi") => "fas fa-wifi",
+            var name when name.Contains("lavadora") => "fas fa-tshirt",
+            var name when name.Contains("balcón") => "fas fa-building",
+            var name when name.Contains("restaurante") => "fas fa-utensils",
+            var name when name.Contains("aire") => "fas fa-snowflake",
+            var name when name.Contains("piscina") => "fas fa-swimmer",
+            var name when name.Contains("patio") => "fas fa-tree",
+            _ => "fas fa-concierge-bell" // Icono predeterminado para servicios
+        };
+    }
+}
+
 @section Scripts {
     <script>
         function toggleService(element, serviceId) {
-            const checkbox = document.getElementById(serviceId);
+            const checkbox = document.getElementById("servicio-" + serviceId);
 
             // Toggle checkbox
             checkbox.checked = !checkbox.checked;
@@ -211,18 +179,18 @@
         function continuarSiguientePaso() {
             const form = document.getElementById('serviciosForm');
 
-            // Obtener servicios seleccionados
+            // Obtener servicios seleccionados (ahora usando IDs de la base de datos)
             const checkboxes = form.querySelectorAll('input[name="servicios"]:checked');
-            const serviciosSeleccionados = Array.from(checkboxes).map(cb => cb.value);
+            const serviciosSeleccionados = Array.from(checkboxes).map(cb => parseInt(cb.value));
 
             // Guardar en sessionStorage
             sessionStorage.setItem('serviciosDisponibles', JSON.stringify(serviciosSeleccionados));
 
-            // Redirigir al siguiente paso (siempre permitir continuar, incluso sin seleccionar servicios)
-            window.location.href = '@Url.Action("ConfirmacionRegistro", "Home")';
+            // Redirigir al siguiente paso
+            window.location.href = '@Url.Action("ConfirmacionRegistro", "Hotel")';
         }
 
-        // Prevenir que el clic en checkbox o label dispare el toggle doble
+        // Mantener el código para prevenir el toggle doble
         document.addEventListener('DOMContentLoaded', function() {
             const checkboxes = document.querySelectorAll('.service-checkbox');
             const labels = document.querySelectorAll('.service-label');

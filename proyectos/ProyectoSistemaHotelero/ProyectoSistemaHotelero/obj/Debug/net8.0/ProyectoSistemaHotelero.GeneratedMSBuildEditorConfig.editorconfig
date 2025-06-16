@@ -17,97 +17,97 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = ProyectoSistemaHotelero
 build_property.RootNamespace = ProyectoSistemaHotelero
-build_property.ProjectDir = C:\Users\erinc\source\repos\Bases-de-Datos-1\proyecto-2-proyecto2_david_erin-1\proyectos\ProyectoSistemaHotelero\ProyectoSistemaHotelero\
+build_property.ProjectDir = C:\Users\david\OneDrive\Escritorio\proyecto-2-proyecto2_david_erin-1\proyectos\ProyectoSistemaHotelero\ProyectoSistemaHotelero\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\erinc\source\repos\Bases-de-Datos-1\proyecto-2-proyecto2_david_erin-1\proyectos\ProyectoSistemaHotelero\ProyectoSistemaHotelero
+build_property.MSBuildProjectDirectory = C:\Users\david\OneDrive\Escritorio\proyecto-2-proyecto2_david_erin-1\proyectos\ProyectoSistemaHotelero\ProyectoSistemaHotelero
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Account/Registro.cshtml]
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Account/Registro.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Ryby5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/AcercaActividad.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxBY2VyY2FBY3RpdmlkYWQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/ConfirmacionRegistro.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb25maXJtYWNpb25SZWdpc3Ryby5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/ConfirmacionRegistro2.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb25maXJtYWNpb25SZWdpc3RybzIuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/DetallesHospedaje.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxEZXRhbGxlc0hvc3BlZGFqZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/DireccionActividad.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxEaXJlY2Npb25BY3RpdmlkYWQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/DireccionEstablecimiento.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxEaXJlY2Npb25Fc3RhYmxlY2ltaWVudG8uY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/FormularioActividades.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxGb3JtdWxhcmlvQWN0aXZpZGFkZXMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/FormularioHospedaje.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxGb3JtdWxhcmlvSG9zcGVkYWplLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/Index.cshtml]
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/Privacy.cshtml]
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/RegistroActividades.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxSZWdpc3Ryb0FjdGl2aWRhZGVzLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/RegistroHospedaje.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxSZWdpc3Ryb0hvc3BlZGFqZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/SeleccionServicios.cshtml]
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/SeleccionServicios.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTZWxlY2Npb25TZXJ2aWNpb3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/ServiciosActividad.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTZXJ2aWNpb3NBY3RpdmlkYWQuY3NodG1s
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Hotel/ConfirmacionRegistro.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG90ZWxcQ29uZmlybWFjaW9uUmVnaXN0cm8uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/ServiciosEstablecimiento.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTZXJ2aWNpb3NFc3RhYmxlY2ltaWVudG8uY3NodG1s
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Hotel/DetallesHospedaje.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG90ZWxcRGV0YWxsZXNIb3NwZWRhamUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Shared/Error.cshtml]
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Hotel/DireccionEstablecimiento.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG90ZWxcRGlyZWNjaW9uRXN0YWJsZWNpbWllbnRvLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Hotel/FormularioHospedaje.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG90ZWxcRm9ybXVsYXJpb0hvc3BlZGFqZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Hotel/RegistroHospedaje.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG90ZWxcUmVnaXN0cm9Ib3NwZWRhamUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Hotel/ServiciosEstablecimiento.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG90ZWxcU2VydmljaW9zRXN0YWJsZWNpbWllbnRvLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Recreativo/AcercaActividad.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVjcmVhdGl2b1xBY2VyY2FBY3RpdmlkYWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Recreativo/ConfirmacionRegistro2.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVjcmVhdGl2b1xDb25maXJtYWNpb25SZWdpc3RybzIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Recreativo/DireccionActividad.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVjcmVhdGl2b1xEaXJlY2Npb25BY3RpdmlkYWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Recreativo/FormularioActividades.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVjcmVhdGl2b1xGb3JtdWxhcmlvQWN0aXZpZGFkZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Recreativo/RegistroActividades.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVjcmVhdGl2b1xSZWdpc3Ryb0FjdGl2aWRhZGVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Recreativo/ServiciosActividad.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVjcmVhdGl2b1xTZXJ2aWNpb3NBY3RpdmlkYWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/_ViewImports.cshtml]
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/_ViewStart.cshtml]
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/erinc/source/repos/Bases-de-Datos-1/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Shared/_Layout.cshtml]
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-5jx735xk6l

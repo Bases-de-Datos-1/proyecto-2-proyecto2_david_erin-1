@@ -1,13 +1,13 @@
 ﻿@{
-    ViewData["Title"] = "Dirección de la Actividad - UTravel";
+    ViewData["Title"] = "Información Específica - UTravel";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
     .main-content {
         background-color: #f8f9fa;
-        min-height: 100vh;
-        padding: 100px 0 150px 0;
+        min-height: calc(100vh - 200px); 
+        padding: 100px 0 80px 0;
     }
 
     .form-title {
@@ -43,8 +43,6 @@
         min-width: 200px;
         text-align: left;
         margin: 0;
-        display: flex;
-        align-items: center;
     }
 
     .form-control {
@@ -106,68 +104,68 @@
 
 <div class="main-content">
     <div class="container">
-        <h2 class="form-title">Dirección de la Actividad</h2>
+        <h2 class="form-title">Información Específica</h2>
 
         <div class="form-container">
-            <form id="direccionActividadForm">
+            <form id="informacionForm">
                 <div class="form-group">
-                    <label class="form-label" for="provincia">
-                        Provincia
+                    <label class="form-label" for="nombreEstablecimiento">
+                        Nombre del establecimiento
                     </label>
                     <input type="text"
                            class="form-control"
-                           id="provincia"
-                           name="provincia"
-                           placeholder="Ingrese la provincia"
+                           id="nombreEstablecimiento"
+                           name="nombreEstablecimiento"
+                           placeholder="Ingrese el nombre del establecimiento"
                            required>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="canton">
-                        Cantón
+                    <label class="form-label" for="cedulaJuridica">
+                        Cédula Jurídica
                     </label>
                     <input type="text"
                            class="form-control"
-                           id="canton"
-                           name="canton"
-                           placeholder="Ingrese el cantón"
+                           id="cedulaJuridica"
+                           name="cedulaJuridica"
+                           placeholder="Ingrese la cédula jurídica"
+                           pattern="[0-9]+"
                            required>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="distrito">
-                        Distrito
+                    <label class="form-label" for="telefonos">
+                        Teléfonos
                     </label>
-                    <input type="text"
+                    <input type="tel"
                            class="form-control"
-                           id="distrito"
-                           name="distrito"
-                           placeholder="Ingrese el distrito"
+                           id="telefonos"
+                           name="telefonos"
+                           placeholder="Ingrese los teléfonos separados por comas (ej: 61827000, 27580000)"
                            required>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="barrio">
-                        Barrio
+                    <label class="form-label" for="correoElectronico">
+                        Correo Electrónico
                     </label>
-                    <input type="text"
+                    <input type="email"
                            class="form-control"
-                           id="barrio"
-                           name="barrio"
-                           placeholder="Ingrese el barrio"
+                           id="correoElectronico"
+                           name="correoElectronico"
+                           placeholder="Ingrese el correo electrónico"
                            required>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="senasExactas">
-                        Señas Exactas
+                    <label class="form-label" for="urlSitioWeb">
+                        URL Sitio Web (opcional)
                     </label>
-                    <input type="text"
+                    <input type="url"
                            class="form-control"
-                           id="senasExactas"
-                           name="senasExactas"
-                           placeholder="Ingrese las señas exactas"
-                           required>
+                           id="urlSitioWeb"
+                           name="urlSitioWeb"
+                           placeholder="Ingrese la URL del sitio web">
                 </div>
 
                 <button type="button" class="siguiente-btn" onclick="continuarSiguientePaso()">
@@ -181,31 +179,64 @@
 @section Scripts {
     <script>
         function continuarSiguientePaso() {
-            const form = document.getElementById('direccionActividadForm');
+            const form = document.getElementById('informacionForm');
 
             // Validar campos requeridos
             if (form.checkValidity()) {
                 // Obtener los datos del formulario
                 const formData = new FormData(form);
                 const data = {};
+                
+                // Procesar cada campo del formulario excepto teléfonos
                 for (let [key, value] of formData.entries()) {
-                    data[key] = value;
+                    if (key !== 'telefonos') {
+                        data[key] = value;
+                    }
                 }
+                
+                // Procesar los teléfonos separados por comas
+                const telefonosInput = formData.get('telefonos');
+                const telefonos = telefonosInput.split(',')
+                    .map(tel => tel.trim())
+                    .filter(tel => tel.length > 0);
+                
+                // Guardar los teléfonos como una lista
+                data.telefonos = telefonos;
+                
+                // Añadir tipoHotelID desde ViewBag
+                data.tipoHotelID = @ViewBag.TipoHotelID;
 
                 // Guardar temporalmente en sessionStorage para el siguiente paso
-                sessionStorage.setItem('direccionActividad', JSON.stringify(data));
+                sessionStorage.setItem('informacionEspecifica', JSON.stringify(data));
 
                 // Redirigir al siguiente paso
-                window.location.href = '@Url.Action("ServiciosActividad", "Home")';
+                window.location.href = '@Url.Action("DetallesHospedaje", "Hotel")';
             } else {
                 // Mostrar errores de validación
                 form.reportValidity();
             }
         }
 
-        // Validación en tiempo real para habilitar/deshabilitar botón
+        // Limpieza de formato para teléfonos
         document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('direccionActividadForm');
+            const telefonosInput = document.getElementById('telefonos');
+            
+            telefonosInput.addEventListener('blur', function() {
+                // Validar formato cuando el usuario sale del campo
+                const telefonosRaw = this.value.split(',');
+                
+                // Validar que sean solo dígitos y filtrar entradas vacías
+                const telefonosLimpios = telefonosRaw
+                    .map(tel => tel.trim())
+                    .filter(tel => tel.length > 0)
+                    .map(tel => tel.replace(/\D/g, '')); // Solo dígitos
+                
+                // Actualizar el campo con los valores limpios
+                this.value = telefonosLimpios.join(', ');
+            });
+            
+            // El resto del código de validación existente...
+            const form = document.getElementById('informacionForm');
             const btn = document.querySelector('.siguiente-btn');
 
             function validateForm() {

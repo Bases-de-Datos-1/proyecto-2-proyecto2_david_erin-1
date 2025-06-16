@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<TipoHotel>
+@{
     ViewData["Title"] = "Registro de Hospedaje - UTravel";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -113,47 +114,22 @@
         <h2 class="selection-title">¿Qué tipo de lugar estarás publicando?</h2>
 
         <div class="accommodation-grid">
-            <div class="accommodation-card" data-type="hotel" onclick="selectAccommodation(this, 'hotel')">
-                <div class="accommodation-image">
-                    <i class="fas fa-building"></i>
-                </div>
-                <h3 class="accommodation-name">Hotel</h3>
-            </div>
-
-            <div class="accommodation-card" data-type="hostal" onclick="selectAccommodation(this, 'hostal')">
-                <div class="accommodation-image">
-                    <i class="fas fa-bed"></i>
-                </div>
-                <h3 class="accommodation-name">Hostal</h3>
-            </div>
-
-            <div class="accommodation-card" data-type="casa" onclick="selectAccommodation(this, 'casa')">
-                <div class="accommodation-image">
-                    <i class="fas fa-home"></i>
-                </div>
-                <h3 class="accommodation-name">Casa</h3>
-            </div>
-
-            <div class="accommodation-card" data-type="departamento" onclick="selectAccommodation(this, 'departamento')">
-                <div class="accommodation-image">
-                    <i class="fas fa-city"></i>
-                </div>
-                <h3 class="accommodation-name">Departamento</h3>
-            </div>
-
-            <div class="accommodation-card" data-type="cuarto-compartido" onclick="selectAccommodation(this, 'cuarto-compartido')">
-                <div class="accommodation-image">
-                    <i class="fas fa-users"></i>
-                </div>
-                <h3 class="accommodation-name">Cuarto<br>Compartido</h3>
-            </div>
-
-            <div class="accommodation-card" data-type="cabana" onclick="selectAccommodation(this, 'cabana')">
-                <div class="accommodation-image">
-                    <i class="fas fa-tree"></i>
-                </div>
-                <h3 class="accommodation-name">Cabaña</h3>
-            </div>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var tipoHotel in Model)
+                {
+                    <div class="accommodation-card" data-type="@tipoHotel.TipoHotelID" onclick="selectAccommodation(this, @tipoHotel.TipoHotelID)">
+                        <div class="accommodation-image">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h3 class="accommodation-name">@tipoHotel.Nombre</h3>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-center">No hay tipos de alojamiento disponibles actualmente.</p>
+            }
         </div>
 
         <button class="continue-btn" id="continueBtn" disabled onclick="continueToNextStep()">
@@ -166,7 +142,7 @@
     <script>
         let selectedType = null;
 
-        function selectAccommodation(element, type) {
+        function selectAccommodation(element, typeId) {
             // Remover selección anterior
             document.querySelectorAll('.accommodation-card').forEach(card => {
                 card.classList.remove('selected');
@@ -174,7 +150,7 @@
 
             // Agregar selección actual
             element.classList.add('selected');
-            selectedType = type;
+            selectedType = typeId;
 
             // Habilitar botón continuar
             document.getElementById('continueBtn').disabled = false;
@@ -182,9 +158,29 @@
 
         function continueToNextStep() {
             if (selectedType) {
-                // Redirigir a la siguiente página con el tipo seleccionado
-                window.location.href = '@Url.Action("FormularioHospedaje", "Home")?tipo=' + selectedType;
+                // Crear y enviar un formulario POST
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '@Url.Action("GuardarTipoHotel", "Hotel")';
+                
+                // Agregar token antifalsificación para protección CSRF
+                const tokenField = document.createElement('input');
+                tokenField.type = 'hidden';
+                tokenField.name = '__RequestVerificationToken';
+                tokenField.value = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+                form.appendChild(tokenField);
+                
+                // Agregar el ID del tipo de hotel seleccionado
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'tipoHotelId';
+                input.value = selectedType;
+                
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
             }
         }
     </script>
 }
+

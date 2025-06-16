@@ -207,7 +207,7 @@
                 sessionStorage.setItem('direccionEstablecimiento', JSON.stringify(data));
 
                 // Redirigir al siguiente paso
-                window.location.href = '@Url.Action("ServiciosEstablecimiento", "Home")';
+                window.location.href = '@Url.Action("ServiciosEstablecimiento", "Hotel")';
             } else {
                 // Mostrar errores de validación
                 form.reportValidity();

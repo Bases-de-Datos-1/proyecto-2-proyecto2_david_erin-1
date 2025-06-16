@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<TipoActividad>
+@{
     ViewData["Title"] = "Registro de Actividades - UTravel";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -114,40 +115,15 @@
         <h2 class="selection-title">¿Qué tipo de actividades tienes<br>para ofrecer?</h2>
 
         <div class="activities-grid">
-            <div class="activity-card" onclick="selectActivity(this, 'tour-bote')">
-                <div class="activity-image">
-                    <i class="fas fa-ship"></i>
+            @foreach (var tipoActividad in Model)
+            {
+                <div class="activity-card" onclick="selectActivity(this, @tipoActividad.TipoActividadID)">
+                    <div class="activity-image">
+                        <i class="@GetIconForActivity(tipoActividad.Nombre)"></i>
+                    </div>
+                    <h3 class="activity-name">@tipoActividad.Nombre</h3>
                 </div>
-                <h3 class="activity-name">Tour en bote</h3>
-            </div>
-
-            <div class="activity-card" onclick="selectActivity(this, 'tour-lancha')">
-                <div class="activity-image">
-                    <i class="fas fa-anchor"></i>
-                </div>
-                <h3 class="activity-name">Tour en lancha</h3>
-            </div>
-
-            <div class="activity-card" onclick="selectActivity(this, 'tour-catamaran')">
-                <div class="activity-image">
-                    <i class="fas fa-ship"></i>
-                </div>
-                <h3 class="activity-name">Tour en<br>catamarán</h3>
-            </div>
-
-            <div class="activity-card" onclick="selectActivity(this, 'kayak')">
-                <div class="activity-image">
-                    <i class="fas fa-swimmer"></i>
-                </div>
-                <h3 class="activity-name">Kayak</h3>
-            </div>
-
-            <div class="activity-card" onclick="selectActivity(this, 'transporte')">
-                <div class="activity-image">
-                    <i class="fas fa-bus"></i>
-                </div>
-                <h3 class="activity-name">Transporte</h3>
-            </div>
+            }
         </div>
 
         <button class="continue-btn" id="continueBtn" disabled onclick="continueToNextStep()">
@@ -156,18 +132,34 @@
     </div>
 </div>
 
+@functions {
+    public string GetIconForActivity(string activityName)
+    {
+        // Mapea nombres de actividades a clases de iconos FontAwesome
+        return activityName.ToLower() switch
+        {
+            var name when name.Contains("bote") => "fas fa-ship",
+            var name when name.Contains("lancha") => "fas fa-anchor",
+            var name when name.Contains("catamaran") => "fas fa-ship",
+            var name when name.Contains("kayak") => "fas fa-swimmer",
+            var name when name.Contains("transporte") => "fas fa-bus",
+            _ => "fas fa-hiking" // Icono predeterminado para actividades
+        };
+    }
+}
+
 @section Scripts {
     <script>
         let selectedActivities = [];
 
-        function selectActivity(element, activity) {
+        function selectActivity(element, activityId) {
             // Toggle selection
             if (element.classList.contains('selected')) {
                 element.classList.remove('selected');
-                selectedActivities = selectedActivities.filter(a => a !== activity);
+                selectedActivities = selectedActivities.filter(a => a !== activityId);
             } else {
                 element.classList.add('selected');
-                selectedActivities.push(activity);
+                selectedActivities.push(activityId);
             }
 
             // Enable/disable continue button
@@ -177,10 +169,10 @@
         function continueToNextStep() {
             if (selectedActivities.length > 0) {
                 // Guardar actividades seleccionadas
-                sessionStorage.setItem('actividadesSeleccionadas', JSON.stringify(selectedActivities));
+                sessionStorage.setItem('tiposActividadSeleccionados', JSON.stringify(selectedActivities));
 
                 // Redirigir al formulario de información específica para recreativos
-                window.location.href = '@Url.Action("FormularioActividades", "Home")';
+                window.location.href = '@Url.Action("FormularioActividades", "Recreativo")';
             }
         }
     </script>
