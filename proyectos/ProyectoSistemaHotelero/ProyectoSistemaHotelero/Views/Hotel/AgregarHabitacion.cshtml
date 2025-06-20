@@ -1,0 +1,173 @@
+﻿@using ProyectoSistemaHotelero.Models.ViewModels
+@model HabitacionViewModel
+@{
+    ViewData["Title"] = "Agregar Habitación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .main-content {
+        background-color: #f8f9fa;
+        min-height: 100vh;
+        padding: 100px 0 150px 0;
+    }
+
+    .form-title {
+        font-size: 32px;
+        color: #333;
+        margin-bottom: 60px;
+        font-weight: 600;
+        text-align: center;
+        line-height: 1.3;
+    }
+
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        padding: 50px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #444;
+        font-size: 16px;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e1e5e9;
+        border-radius: 6px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+        background-color: #fff;
+    }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #62B1B1;
+            box-shadow: 0 0 0 3px rgba(98, 177, 177, 0.1);
+        }
+
+    .form-select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 12px center;
+        background-repeat: no-repeat;
+        background-size: 16px 12px;
+        padding-right: 40px;
+        appearance: none;
+    }
+
+    .text-danger {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .btn-container {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 40px;
+    }
+
+    .btn {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        min-width: 120px;
+    }
+
+    .btn-primary {
+        background: #62B1B1;
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background: #4a9999;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(98, 177, 177, 0.3);
+        }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+
+        .btn-secondary:hover {
+            background: #545b62;
+            color: white;
+            text-decoration: none;
+        }
+
+    .info-box {
+        background: #f8fdfc;
+        border: 1px solid #62B1B1;
+        border-radius: 6px;
+        padding: 15px;
+        margin-bottom: 30px;
+    }
+
+    .info-title {
+        font-weight: 600;
+        color: #62B1B1;
+        margin-bottom: 5px;
+    }
+
+    .info-text {
+        color: #666;
+        font-size: 14px;
+    }
+</style>
+
+<div class="main-content">
+    <div class="container">
+        <h2 class="form-title">Datos de la Habitación</h2>
+
+        <div class="form-container">
+            <div class="info-box">
+                <div class="info-title">Información</div>
+                <div class="info-text">Agregue una nueva habitación seleccionando un número único y el tipo de habitación correspondiente.</div>
+            </div>
+
+            <form asp-action="AgregarHabitacion" method="post">
+                <input type="hidden" asp-for="CedulaJuridica" />
+
+                <div class="form-group">
+                    <label asp-for="Numero" class="form-label"></label>
+                    <input asp-for="Numero" class="form-control" type="number" min="1" placeholder="Ej: 120" />
+                    <span asp-validation-for="Numero" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="TipoHabitacionID" class="form-label"></label>
+                    <select asp-for="TipoHabitacionID" asp-items="Model.TiposHabitacion" class="form-control form-select">
+                        <option value="">-- Seleccione un tipo de habitación --</option>
+                    </select>
+                    <span asp-validation-for="TipoHabitacionID" class="text-danger"></span>
+                </div>
+
+                <div class="btn-container">
+                    <a href="@Url.Action("AdministrarHabitaciones")" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Siguiente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

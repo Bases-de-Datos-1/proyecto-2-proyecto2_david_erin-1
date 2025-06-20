@@ -1,0 +1,133 @@
+@{
+    ViewData["Title"] = "Administrar Habitaciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string nombreServicio = ViewBag.NombreServicio ?? "Su Hotel";
+}
+
+<style>
+    .admin-panel-container {
+        background-color: #ffffff;
+        min-height: 100vh;
+        padding: 120px 0;
+    }
+
+    .admin-habitaciones-panel {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .service-header {
+        background-color: #f5f5f5;
+        padding: 15px 20px;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+    }
+
+    .service-header i {
+        margin-right: 10px;
+        color: #62B1B1;
+    }
+
+    .action-cards {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .action-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 30px 20px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: #333;
+        height: 100%;
+    }
+
+    .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        color: #333;
+        text-decoration: none;
+    }
+
+    .icon-container {
+        width: 70px;
+        height: 70px;
+        background: #62B1B1;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+
+    .icon-container i {
+        font-size: 30px;
+        color: white;
+    }
+
+    .action-card h3 {
+        font-size: 18px;
+        font-weight: 500;
+        margin-top: 10px;
+    }
+
+    
+</style>
+
+<div class="admin-panel-container">
+    <div class="container">
+        <h1 class="text-center mb-5">Administración de habitaciones</h1>
+
+        <div class="admin-habitaciones-panel">
+            <div class="service-header">
+                <i class="fas fa-hotel"></i>
+                <span>Servicio: @nombreServicio</span>
+            </div>
+
+            <div class="action-cards">
+                <a href="/Hotel/AgregarHabitacion" class="action-card">
+                    <div class="icon-container">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <h3>Agregar habitación</h3>
+                </a>
+
+                <a href="/Hotel/AgregarTipoHabitacion" class="action-card">
+                    <div class="icon-container">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <h3>Agregar tipo de habitación</h3>
+                </a>
+
+                <a href="/Hotel/VerHabitaciones" class="action-card">
+                    <div class="icon-container">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <h3>Ver habitaciones</h3>
+                </a>
+
+                <a href="/Hotel/VerTiposHabitaciones" class="action-card">
+                    <div class="icon-container">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <h3>Ver tipos de habitaciones</h3>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

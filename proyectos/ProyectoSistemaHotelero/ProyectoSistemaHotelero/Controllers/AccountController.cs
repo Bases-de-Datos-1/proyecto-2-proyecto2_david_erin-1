@@ -1,4 +1,4 @@
-using System.Security.Claims;
+ï»¿using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -67,7 +67,7 @@ namespace ProyectoSistemaHotelero.Controllers
                     Telefonos = new List<TelefonoClienteViewModel>()
                 };
                 
-                // Determinar si es de Costa Rica por el país seleccionado y el valor del ID
+                // Determinar si es de Costa Rica por el paÃ­s seleccionado y el valor del ID
                 var paisId = int.Parse(informacionPersonal["paisResidencia"].ToString());
                 viewModel.Cliente.EsCostaRica = paisId == 1; // Asumiendo que Costa Rica es ID 1
                 
@@ -79,7 +79,7 @@ namespace ProyectoSistemaHotelero.Controllers
                     viewModel.Cliente.Distrito = direccion.Length > 2 ? direccion[2].Trim() : "";
                 }
                 
-                // Añadir teléfonos
+                // AÃ±adir telÃ©fonos
                 if (informacionPersonal.ContainsKey("telefono1") && !string.IsNullOrEmpty(informacionPersonal["telefono1"].ToString()))
                 {
                     viewModel.Telefonos.Add(new TelefonoClienteViewModel 
@@ -111,7 +111,7 @@ namespace ProyectoSistemaHotelero.Controllers
                 var result = await _clienteService.RegisterClienteAsync(viewModel);
                 if (result)
                 {
-                    // NUEVO: Iniciar sesión automáticamente después del registro
+                    // NUEVO: Iniciar sesiÃ³n automÃ¡ticamente despuÃ©s del registro
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, viewModel.Cliente.Nombre + " " + viewModel.Cliente.PrimerApellido),
@@ -124,7 +124,7 @@ namespace ProyectoSistemaHotelero.Controllers
 
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-                    return Json(new { success = true, message = "Cliente registrado e iniciada sesión exitosamente" });
+                    return Json(new { success = true, message = "Cliente registrado e iniciada sesiÃ³n exitosamente" });
                 }
                 else
                 {
@@ -149,11 +149,11 @@ namespace ProyectoSistemaHotelero.Controllers
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            
+
             if (ModelState.IsValid)
             {
                 var result = await _authService.AuthenticateUserAsync(model.Email, model.Password);
-                
+
                 if (result.IsSuccess)
                 {
                     var claims = new List<Claim>
@@ -161,34 +161,34 @@ namespace ProyectoSistemaHotelero.Controllers
                         new Claim(ClaimTypes.Name, result.Nombre),
                         new Claim(ClaimTypes.NameIdentifier, result.ID),
                         new Claim(ClaimTypes.Email, result.Email),
-                        new Claim("UserType", result.TipoLogin)
+                        new Claim(ClaimTypes.Role, result.TipoLogin)
                     };
-                    
+
                     if (!string.IsNullOrEmpty(result.TipoUsuario))
                     {
-                        claims.Add(new Claim("Role", result.TipoUsuario));
+      
+                        claims.Add(new Claim("TipoUsuario", result.TipoUsuario));
                     }
-                    
+
                     if (!string.IsNullOrEmpty(result.CedulaJuridica))
                     {
                         claims.Add(new Claim("CedulaJuridica", result.CedulaJuridica));
                     }
-                    
+
                     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var principal = new ClaimsPrincipal(identity);
-                    
+
                     var authProperties = new AuthenticationProperties
                     {
-                        IsPersistent = model.RememberMe, // Usa la selección del usuario
-                        ExpiresUtc = model.RememberMe ? DateTimeOffset.UtcNow.AddDays(7) : null // Solo expira si es persistente
+                        IsPersistent = model.RememberMe,
+                        ExpiresUtc = model.RememberMe ? DateTimeOffset.UtcNow.AddDays(7) : null
                     };
-                    
+
                     await HttpContext.SignInAsync(
-                        CookieAuthenticationDefaults.AuthenticationScheme, 
+                        CookieAuthenticationDefaults.AuthenticationScheme,
                         principal,
                         authProperties);
-                    
-                    // Redirigir después del login
+
                     if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                     {
                         return Redirect(returnUrl);
@@ -204,7 +204,7 @@ namespace ProyectoSistemaHotelero.Controllers
                     ViewBag.ErrorMessage = result.ErrorMessage;
                 }
             }
-            
+
             return View(model);
         }
 

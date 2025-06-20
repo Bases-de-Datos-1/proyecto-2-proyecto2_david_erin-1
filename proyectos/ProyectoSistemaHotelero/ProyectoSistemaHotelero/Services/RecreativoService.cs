@@ -142,5 +142,41 @@ namespace ProyectoSistemaHotelero.Services
                 throw;
             }
         }
+
+        public EmpresaActividad GetActividadByCedulaJuridica(string cedulaJuridica)
+        {
+            EmpresaActividad actividad = null;
+            
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    using var command = new SqlCommand("sp_ObtenerActividadPorCedulaJuridica", connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@CedulaJuridica", cedulaJuridica);
+                    
+                    using var reader = command.ExecuteReader();
+                    
+                    if (reader.Read())
+                    {
+                        actividad = new EmpresaActividad
+                        {
+                            CedulaJuridica = reader["CedulaJuridica"].ToString(),
+                            Nombre = reader["Nombre"].ToString(),
+                            CorreoElectronico = reader["CorreoElectronico"].ToString(),
+                            // Añadir más campos según sea necesario
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log del error
+                Console.WriteLine($"Error al obtener actividad: {ex.Message}");
+            }
+            
+            return actividad;
+        }
     }
 }

@@ -1,0 +1,186 @@
+@using ProyectoSistemaHotelero.Models.ViewModels
+@model TipoHabitacionViewModel   
+@{
+    ViewData["Title"] = "Agregar Tipo de Habitación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .main-content {
+        background-color: #ffffff;
+        min-height: 100vh;
+        padding: 120px 0;
+    }
+
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 30px;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        color: #333;
+        margin-bottom: 2rem;
+        font-weight: 600;
+    }
+
+    .form-group {
+        margin-bottom: 2rem;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.2s;
+    }
+
+    .form-control:focus {
+        border-color: #62B1B1;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(98, 177, 177, 0.2);
+    }
+
+    textarea.form-control {
+        min-height: 100px;
+    }
+
+    .siguiente-btn {
+        background: #444;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 12px 30px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .siguiente-btn:hover {
+        background: #333;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .dropdown-select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23444' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+        background-size: 16px;
+    }
+
+    .quantity-control {
+        display: flex;
+        align-items: center;
+    }
+
+    .quantity-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #f0f0f0;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+
+    .quantity-btn:hover {
+        background-color: #e0e0e0;
+    }
+
+    .quantity-input {
+        width: 60px;
+        text-align: center;
+        font-size: 1.2rem;
+        border: none;
+        background: none;
+        margin: 0 10px;
+    }
+</style>
+
+<div class="main-content">
+    <div class="form-container">
+        <h1>Tipo de Habitación</h1>
+        
+        <form asp-action="AgregarTipoHabitacion" method="post">
+            <div class="form-group">
+                <label class="form-label" for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="Nombre" class="form-control" placeholder="Habitación Cuádruple" value="@Model.Nombre" required>
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="descripcion">Descripción</label>
+                <textarea id="descripcion" name="Descripcion" class="form-control" placeholder="La habitación cuádruple es excelente para 3 a 4 personas, brindando mucha comodidad a los ..." required>@Model.Descripcion</textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="tipoCama">Tipo de Cama</label>
+                <div class="d-flex align-items-center">
+                    <select id="tipoCama" name="TipoCamaID" class="dropdown-select" required>
+                        <option value="">Seleccione un tipo de cama</option>
+                        @foreach (var tipoCama in Model.TiposCama)
+                        {
+                            <option value="@tipoCama.TipoCamaID" selected="@(Model.TipoCamaID == tipoCama.TipoCamaID)">@tipoCama.Nombre</option>
+                        }
+                    </select>
+                    
+                    <div class="quantity-control ms-4">
+                        <button type="button" class="quantity-btn decrease-btn" onclick="decreaseQuantity()">-</button>
+                        <input type="number" id="cantidad" name="CantidadCamas" class="quantity-input" value="@(Model.CantidadCamas > 0 ? Model.CantidadCamas : 1)" min="1" readonly>
+                        <button type="button" class="quantity-btn increase-btn" onclick="increaseQuantity()">+</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="precio">Precio</label>
+                <input type="text" id="precio" name="Precio" class="form-control" placeholder="44000" value="@Model.Precio" required>
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+            
+            <button type="submit" class="siguiente-btn">Siguiente</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function decreaseQuantity() {
+            const input = document.getElementById('cantidad');
+            const currentValue = parseInt(input.value);
+            if (currentValue > 1) {
+                input.value = currentValue - 1;
+            }
+        }
+
+        function increaseQuantity() {
+            const input = document.getElementById('cantidad');
+            const currentValue = parseInt(input.value);
+            input.value = currentValue + 1;
+        }
+    </script>
+}
