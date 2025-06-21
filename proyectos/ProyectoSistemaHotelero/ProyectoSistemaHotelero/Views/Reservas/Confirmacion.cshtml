@@ -1,0 +1,461 @@
+﻿@using ProyectoSistemaHotelero.Models.ViewModels
+@model ConfirmacionReservaViewModel
+@{
+    ViewData["Title"] = "Reserva Confirmada - UTravel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .confirmacion-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 120px 20px 50px;
+        background: linear-gradient(135deg, #7db8b3 0%, #62a3a8 100%);
+        min-height: 100vh;
+    }
+
+    .confirmacion-card {
+        background: white;
+        border-radius: 20px;
+        padding: 0;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        overflow: hidden;
+        margin: 0 auto;
+        max-width: 800px;
+    }
+
+    .header-section {
+        background: linear-gradient(135deg, #7db8b3 0%, #62a3a8 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .success-icon {
+        font-size: 48px;
+        margin-bottom: 15px;
+        color: white;
+    }
+
+    .confirmacion-titulo {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .numero-reserva {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .fecha-reserva {
+        opacity: 0.9;
+        font-size: 14px;
+    }
+
+    .contenido-principal {
+        padding: 40px;
+    }
+
+    .hotel-section {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 15px;
+    }
+
+    .hotel-imagen {
+        width: 120px;
+        height: 90px;
+        border-radius: 10px;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+
+    .hotel-info h3 {
+        margin: 0 0 8px 0;
+        font-size: 20px;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .hotel-info p {
+        margin: 0 0 5px 0;
+        color: #666;
+        font-size: 14px;
+    }
+
+    .habitacion-info {
+        background: #e8f6f3;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+    }
+
+    .habitacion-titulo {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .precio-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .precio-detalle {
+        color: #666;
+        font-size: 14px;
+    }
+
+    .precio-total {
+        font-size: 20px;
+        font-weight: 700;
+        color: #7db8b3;
+    }
+
+    .detalles-estadia {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .detalle-item {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .detalle-label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+    }
+
+    .detalle-valor {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .servicios-section {
+        margin-bottom: 30px;
+    }
+
+    .servicios-titulo {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #7db8b3;
+        padding-bottom: 8px;
+    }
+
+    .servicios-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .servicio-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+    }
+
+    .servicio-icon {
+        width: 20px;
+        color: #7db8b3;
+        font-size: 16px;
+    }
+
+    .servicio-texto {
+        color: #333;
+        font-size: 14px;
+    }
+
+    .contacto-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+    }
+
+    .contacto-titulo {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .contacto-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+    }
+
+    .contacto-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .btn-principal {
+        background: linear-gradient(135deg, #7db8b3 0%, #62a3a8 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 15px 30px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 10px;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-principal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(125, 184, 179, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-secundario {
+        background: transparent;
+        color: #7db8b3;
+        border: 2px solid #7db8b3;
+        border-radius: 12px;
+        padding: 13px 30px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 10px;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-secundario:hover {
+            background: #7db8b3;
+            color: white;
+            text-decoration: none;
+        }
+
+    .acciones-footer {
+        text-align: center;
+        padding: 20px 0;
+    }
+
+    .vehiculo-info {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .vehiculo-info.no-vehiculo {
+            background: #d1ecf1;
+            border-color: #bee5eb;
+        }
+
+    .alert-icon {
+        font-size: 20px;
+        color: #856404;
+    }
+
+        .alert-icon.info {
+            color: #0c5460;
+        }
+</style>
+
+<div class="confirmacion-container">
+    <div class="confirmacion-card">
+        <!-- Header de confirmación -->
+        <div class="header-section">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1 class="confirmacion-titulo">¡Reserva Confirmada!</h1>
+            <div class="numero-reserva">Número de Reservación: @Model.NumeroReservacion</div>
+            <div class="fecha-reserva">Creada el @Model.FechaReserva.ToString("dd/MM/yyyy 'a las' HH:mm")</div>
+        </div>
+
+        <div class="contenido-principal">
+            <!-- Información del hotel -->
+            <div class="hotel-section">
+                @if (!string.IsNullOrEmpty(Model.ImagenHotel))
+                {
+                    <img src="@Model.ImagenHotel" alt="@Model.NombreHotel" class="hotel-imagen">
+                }
+                <div class="hotel-info">
+                    <h3>@Model.NombreHotel</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> @Model.UbicacionHotel</p>
+                    @if (!string.IsNullOrEmpty(Model.TelefonoHotel))
+                    {
+                        <p><i class="fas fa-phone"></i> @Model.TelefonoHotel</p>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.EmailHotel))
+                    {
+                        <p><i class="fas fa-envelope"></i> @Model.EmailHotel</p>
+                    }
+                </div>
+            </div>
+
+            <!-- Información de la habitación -->
+            <div class="habitacion-info">
+                <div class="habitacion-titulo">@Model.TipoHabitacion</div>
+                <div class="precio-info">
+                    <div class="precio-detalle">Por ₡@Model.PrecioPorNoche.ToString("N0") la noche</div>
+                    <div class="precio-total">Precio Total: ₡@Model.PrecioTotal.ToString("N0")</div>
+                </div>
+            </div>
+
+            <!-- Detalles de la estadía -->
+            <div class="detalles-estadia">
+                <div class="detalle-item">
+                    <div class="detalle-label">Check In</div>
+                    <div class="detalle-valor">@Model.FechaCheckIn.ToString("dd/MM/yyyy")</div>
+                    <div class="detalle-valor">@Model.HoraIngreso.ToString(@"hh\:mm")</div>
+                </div>
+                <div class="detalle-item">
+                    <div class="detalle-label">Check Out</div>
+                    <div class="detalle-valor">@Model.FechaCheckOut.ToString("dd/MM/yyyy")</div>
+                    <div class="detalle-valor">@Model.HoraSalida.ToString(@"hh\:mm")</div>
+                </div>
+                <div class="detalle-item">
+                    <div class="detalle-label">Huéspedes</div>
+                    <div class="detalle-valor">@Model.CantidadPersonas @(Model.CantidadPersonas == 1 ? "persona" : "personas")</div>
+                </div>
+                <div class="detalle-item">
+                    <div class="detalle-label">Noches</div>
+                    <div class="detalle-valor">@Model.NochesEstadia @(Model.NochesEstadia == 1 ? "noche" : "noches")</div>
+                </div>
+            </div>
+
+            <!-- Información de vehículo -->
+            @if (Model.PoseeVehiculo)
+            {
+                <div class="vehiculo-info">
+                    <i class="fas fa-car alert-icon"></i>
+                    <span>El huésped indica que <strong>posee vehículo</strong>. Se recomienda verificar disponibilidad de parqueo.</span>
+                </div>
+            }
+            else
+            {
+                <div class="vehiculo-info no-vehiculo">
+                    <i class="fas fa-info-circle alert-icon info"></i>
+                    <span>El huésped indica que <strong>no posee vehículo</strong>.</span>
+                </div>
+            }
+
+            <!-- Servicios incluidos -->
+            @if (Model.ServiciosIncluidos.Any())
+            {
+                <div class="servicios-section">
+                    <h3 class="servicios-titulo">Servicios Incluidos</h3>
+                    <div class="servicios-grid">
+                        @foreach (var servicio in Model.ServiciosIncluidos)
+                        {
+                            <div class="servicio-item">
+                                <i class="@GetIconForService(servicio) servicio-icon"></i>
+                                <span class="servicio-texto">@servicio</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Información de contacto -->
+            <div class="contacto-section">
+                <h4 class="contacto-titulo">Información del Cliente</h4>
+                <div class="contacto-info">
+                    <div class="contacto-item">
+                        <i class="fas fa-user"></i>
+                        <span>@Model.NombreCliente</span>
+                    </div>
+                    <div class="contacto-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>@Model.EmailCliente</span>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.TelefonoCliente))
+                    {
+                        <div class="contacto-item">
+                            <i class="fas fa-phone"></i>
+                            <span>@Model.TelefonoCliente</span>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="acciones-footer">
+                <a href="@Url.Action("Index", "Home")" class="btn-principal">
+                    Volver al Menú Principal
+                </a>
+                <button onclick="window.print()" class="btn-secundario">
+                    <i class="fas fa-print"></i> Imprimir Confirmación
+                </button>
+                <a href="@Url.Action("Hoteles", "Busquedas")" class="btn-secundario">
+                    Buscar Más Hoteles
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    public string GetIconForService(string serviceName)
+    {
+        return serviceName.ToLower() switch
+        {
+            var name when name.Contains("wifi") => "fas fa-wifi",
+            var name when name.Contains("aire") => "fas fa-snowflake",
+            var name when name.Contains("televisión") || name.Contains("tv") => "fas fa-tv",
+            var name when name.Contains("balcón") => "fas fa-building",
+            var name when name.Contains("ventilador") => "fas fa-fan",
+            var name when name.Contains("lavadora") => "fas fa-tshirt",
+            var name when name.Contains("piscina") => "fas fa-swimmer",
+            var name when name.Contains("restaurante") => "fas fa-utensils",
+            var name when name.Contains("patio") => "fas fa-tree",
+            var name when name.Contains("teléfono") => "fas fa-phone",
+            var name when name.Contains("vista") => "fas fa-eye",
+            _ => "fas fa-check"
+        };
+    }
+}
+
+@section Scripts {
+    <script>
+        // Limpiar datos de reserva del sessionStorage
+        sessionStorage.removeItem('datosReserva');
+
+        // Función para compartir reserva (opcional)
+        function compartirReserva() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Mi Reserva en @Model.NombreHotel',
+                    text: 'He reservado en @Model.NombreHotel del @Model.FechaCheckIn.ToString("dd/MM/yyyy") al @Model.FechaCheckOut.ToString("dd/MM/yyyy")',
+                    url: window.location.href
+                });
+            }
+        }
+    </script>
+}

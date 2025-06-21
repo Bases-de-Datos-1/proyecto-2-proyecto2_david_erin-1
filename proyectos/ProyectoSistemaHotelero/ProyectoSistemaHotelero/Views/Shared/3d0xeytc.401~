@@ -1,0 +1,279 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - UTravel</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ProyectoSistemaHotelero.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <style>
+        .user-menu {
+            position: relative;
+            display: inline-block;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+            margin-top: 5px;
+        }
+
+            .user-dropdown.show {
+                display: block;
+            }
+
+        .dropdown-item {
+            display: block;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid #f1f1f1;
+            transition: background-color 0.2s;
+        }
+
+            .dropdown-item:last-child {
+                border-bottom: none;
+            }
+
+            .dropdown-item:hover {
+                background-color: #f8f9fa;
+                color: #333;
+                text-decoration: none;
+            }
+
+            .dropdown-item i {
+                margin-right: 10px;
+                width: 16px;
+            }
+
+        .user-info {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f1f1f1;
+            background-color: #f8f9fa;
+        }
+
+        .user-email {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+        }
+
+        .user-name {
+            font-weight: 600;
+            margin: 0;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light bg-transparent position-absolute w-100" style="z-index: 1000;">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <h1 class="fs-2 fw-bold">UTravel</h1>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item px-3">
+                            <a class="nav-link text-dark fw-bold" asp-area="" asp-controller="Home" asp-action="Hospedajes">Servicios de Hospedaje</a>
+                        </li>
+                        <li class="nav-item px-3">
+                            <a class="nav-link text-dark fw-bold" asp-area="" asp-controller="Home" asp-action="Recreativos">Servicios Recreativos</a>
+                        </li>
+                    </ul>
+                    <div class="d-flex align-items-center">
+                        <a class="btn btn-dark rounded-pill px-4 me-3" asp-area="" asp-controller="Home" asp-action="SeleccionServicios">Registra Tu Negocio</a>
+
+                        <!-- Menú de usuario -->
+                        <div class="user-menu">
+                            <button class="btn btn-light rounded-circle" id="userMenuButton" onclick="toggleUserMenu()">
+                                <i class="fas fa-user"></i>
+                            </button>
+
+                            <!-- Dropdown para usuario -->
+                            <div class="user-dropdown" id="userDropdown">
+                                <!-- Contenido se generará dinámicamente con JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="footer-area pt-5">
+        <div class="main-footer py-5" style="background-color: #62B1B1; padding: 60px 0 !important;">
+            <div class="container">
+                <div class="row">
+                    <!-- Columna de la marca -->
+                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                        <h2 class="mb-3 fw-bold">UTravel</h2>
+                        <p class="mb-4">Página enfocada a las pequeñas y medianas empresas que brindan el servicio de hospedaje. Esto con el fin de aumentar el turismo de la zona y que hayan más oportunidades de reconocimiento.</p>
+                        <div class="app-buttons">
+                            <a href="#" class="btn btn-light mb-2 me-2">
+                                <i class="fab fa-google-play me-2"></i> PlayStore
+                            </a>
+                            <a href="#" class="btn btn-light mb-2">
+                                <i class="fab fa-apple me-2"></i> AppleStore
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Columna de servicio al cliente -->
+                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                        <h4 class="mb-4">Servicio al Cliente</h4>
+                        <ul class="list-unstyled footer-links">
+                            <li class="mb-2"><a href="#" class="text-decoration-none text-dark">Encuentra hospedaje</a></li>
+                            <li class="mb-2"><a href="#" class="text-decoration-none text-dark">Como empezar a alojar?</a></li>
+                            <li class="mb-2"><a href="#" class="text-decoration-none text-dark">Por qué nosotros?</a></li>
+                            <li class="mb-2"><a href="#" class="text-decoration-none text-dark">Preguntas frecuentes</a></li>
+                            <li class="mb-2"><a href="#" class="text-decoration-none text-dark">Actividades</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Columna de información de contacto -->
+                    <div class="col-lg-4 col-md-12">
+                        <h4 class="mb-4">Información Contacto</h4>
+                        <ul class="list-unstyled footer-contact">
+                            <li class="mb-2"><i class="fas fa-phone-alt me-2"></i> Teléfono: 1234567890</li>
+                            <li class="mb-2"><i class="fas fa-envelope me-2"></i> Email: utravel@email.com</li>
+                            <li class="mb-4"><i class="fas fa-map-marker-alt me-2"></i> Ubicación: Costa Rica</li>
+                        </ul>
+                        <div class="social-links">
+                            <a href="#" class="text-dark me-3"><i class="fab fa-facebook-f fa-lg"></i></a>
+                            <a href="#" class="text-dark me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                            <a href="#" class="text-dark me-3"><i class="fab fa-instagram fa-lg"></i></a>
+                            <a href="#" class="text-dark"><i class="fab fa-linkedin-in fa-lg"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom py-3" style="background-color: #4A9C9C;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-0 text-white">&copy; 2025 UTravel | All rights reserved</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p class="mb-0 text-white">Hecho por Erin Camacho y David Calvo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Antes del cierre del body, añade esto pero oculto: -->
+    <div id="logout-form-container" style="display: none;">
+        <form id="logout-form" method="post" action="/Account/Logout">
+            @Html.AntiForgeryToken()
+        </form>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        // Variable para detectar si el usuario está autenticado
+        // En tu aplicación real, esto vendría del servidor usando Razor
+        let isUserLoggedIn = @(User.Identity.IsAuthenticated ? "true" : "false");
+        let currentUser = {
+            name: "@(User.Identity.IsAuthenticated? User.Identity.Name : "")",
+            email: "@(User.Identity.IsAuthenticated? User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "" : "")"
+        };
+
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+
+            if (dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            } else {
+                // Generar contenido del dropdown según el estado de autenticación
+                generateDropdownContent();
+                dropdown.classList.add('show');
+            }
+        }
+
+        function generateDropdownContent() {
+            const dropdown = document.getElementById('userDropdown');
+
+            if (isUserLoggedIn) {
+                // Usuario autenticado - mostrar opciones de cuenta
+                dropdown.innerHTML = `
+                    <div class="user-info">
+                        <p class="user-name">${currentUser.name || 'Usuario'}</p>
+                        <p class="user-email">${currentUser.email || 'email@ejemplo.com'}</p>
+                    </div>
+                    <a href="/Account/MiCuenta" class="dropdown-item">
+                        <i class="fas fa-user-circle"></i> Mi Cuenta
+                    </a>
+                    <a href="#" class="dropdown-item" id="logout-link">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                    </a>
+                `;
+                
+                // Añadir evento al enlace de logout
+                setTimeout(() => {
+                    const logoutLink = document.getElementById('logout-link');
+                    if (logoutLink) {
+                        logoutLink.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            document.getElementById('logout-form').submit();
+                        });
+                    }
+                }, 100);
+            } else {
+                // Usuario no autenticado - mostrar opciones de login/registro
+                dropdown.innerHTML = `
+                    <a href="/Account/Login" class="dropdown-item">
+                        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                    </a>
+                    <a href="/Account/Registro" class="dropdown-item">
+                        <i class="fas fa-user-plus"></i> Registrarse
+                    </a>
+                `;
+            }
+        }
+
+        // Cerrar dropdown al hacer clic fuera
+        document.addEventListener('click', function(event) {
+            const userMenu = document.querySelector('.user-menu');
+            const dropdown = document.getElementById('userDropdown');
+
+            if (!userMenu.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Prevenir que el form de logout cierre el dropdown antes de enviarse
+        document.addEventListener('submit', function(event) {
+            if (event.target.closest('.dropdown-item')) {
+                // Permitir que el form se envíe normalmente
+                return true;
+            }
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

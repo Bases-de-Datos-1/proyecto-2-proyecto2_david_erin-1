@@ -1,0 +1,594 @@
+﻿@using ProyectoSistemaHotelero.Models.ViewModels
+@model DetalleHotelViewModel
+@{
+    ViewData["Title"] = $"{Model.NombreHotel} - UTravel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .detalle-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 120px 20px 50px;
+    }
+
+    /* Galería de fotos del hotel - Estilo de las imágenes que mostraste */
+    .galeria-fotos {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 8px;
+        height: 400px;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .foto-principal {
+        grid-row: 1 / 3;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    .foto-secundaria {
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    .mas-fotos {
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    /* Layout principal */
+    .contenido-principal {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 40px;
+        margin-top: 30px;
+    }
+
+    /* Información del hotel */
+    .info-hotel {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .habitacion-info {
+        margin-bottom: 30px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .titulo-habitacion {
+        font-size: 24px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .subtitulo-habitacion {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 15px;
+    }
+
+    .descripcion-habitacion {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 25px;
+    }
+
+    .precio-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+        font-size: 16px;
+    }
+
+    .precio-noche {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .precio-total {
+        color: #666;
+    }
+
+    /* Datos de habitación */
+    .datos-habitacion {
+        margin-bottom: 25px;
+    }
+
+    .datos-titulo {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .numero-habitacion {
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    /* Fotos de la habitación */
+    .fotos-habitacion {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 25px;
+    }
+
+    .foto-habitacion {
+        height: 150px;
+        background-size: cover;
+        background-position: center;
+        border-radius: 8px;
+    }
+
+    /* Servicios */
+    .servicios-titulo {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .servicios-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px 20px;
+        margin-bottom: 20px;
+    }
+
+    .servicio-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 5px 0;
+    }
+
+    .servicio-icon {
+        width: 20px;
+        height: 20px;
+        color: #666;
+        font-size: 16px;
+    }
+
+    .servicio-texto {
+        color: #333;
+        font-size: 14px;
+    }
+
+    .mostrar-todos {
+        color: #7db8b3;
+        border: 1px solid #7db8b3;
+        background: transparent;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+    .mostrar-todos:hover {
+        background: #7db8b3;
+        color: white;
+    }
+
+    /* Panel de reserva - Estilo de la imagen */
+    .panel-reserva {
+        background: #7db8b3;
+        padding: 25px;
+        border-radius: 15px;
+        color: white;
+        position: sticky;
+        top: 140px;
+        height: fit-content;
+    }
+
+    .hotel-miniatura {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .hotel-foto-mini {
+        width: 60px;
+        height: 45px;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+    .hotel-info-mini h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .hotel-info-mini p {
+        margin: 0;
+        font-size: 13px;
+        opacity: 0.9;
+    }
+
+    .habitacion-destacada {
+        background: rgba(255,255,255,0.1);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .habitacion-destacada h4 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .precio-principal {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 5px;
+        text-align: center;
+    }
+
+    .precio-descripcion {
+        text-align: center;
+        opacity: 0.9;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+
+    .resumen-estadia {
+        background: rgba(255,255,255,0.1);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .fecha-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .total-estadia {
+        border-top: 1px solid rgba(255,255,255,0.2);
+        padding-top: 12px;
+        display: flex;
+        justify-content: space-between;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .btn-reservar {
+        width: 100%;
+        background: #333;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 15px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-reservar:hover {
+        background: #555;
+        transform: translateY(-1px);
+    }
+
+    .hotel-header {
+        background: white;
+        padding: 25px 30px;
+        border-radius: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+
+    .nombre-hotel {
+        font-size: 28px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .ubicacion-hotel {
+        color: #666;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+</style>
+
+<div class="detalle-container">
+    <!-- Header del hotel -->
+    <div class="hotel-header">
+        <h1 class="nombre-hotel">@Model.NombreHotel</h1>
+        <div class="ubicacion-hotel">
+            <i class="fas fa-map-marker-alt"></i>
+            @Model.UbicacionCompleta
+        </div>
+    </div>
+
+    <!-- Galería de fotos exacta como la imagen -->
+    @if (Model.FotosHotel.Any())
+    {
+        <div class="galeria-fotos">
+            <div class="foto-principal" style="background-image: url('@Model.FotosHotel.First()')"></div>
+            
+            @for (int i = 1; i < Math.Min(Model.FotosHotel.Count, 5); i++)
+            {
+                <div class="foto-secundaria" style="background-image: url('@Model.FotosHotel[i]')">
+                    @if (i == 4 && Model.FotosHotel.Count > 5)
+                    {
+                        <div class="mas-fotos">
+                            +@(Model.FotosHotel.Count - 4) Más Photos
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+
+    <!-- Contenido principal -->
+    <div class="contenido-principal">
+        <!-- Información del hotel y habitación -->
+        <div class="info-hotel">
+            @if (Model.HabitacionRecomendada != null)
+            {
+                <div class="habitacion-info">
+                    <h2 class="titulo-habitacion">Tipo de Habitación</h2>
+                    <div class="subtitulo-habitacion">@Model.HabitacionRecomendada.NombreHabitacion</div>
+                    <p class="descripcion-habitacion">@Model.HabitacionRecomendada.DescripcionHabitacion</p>
+
+                    <div class="precio-info">
+                        <span class="precio-noche">@Model.HabitacionRecomendada.CantidadCamas @Model.HabitacionRecomendada.TipoCamas / ₡@Model.HabitacionRecomendada.PrecioPorNoche.ToString("N0") la noche</span>
+                        <span class="precio-total">Total: ₡@Model.PrecioTotal.ToString("N0")</span>
+                    </div>
+
+                    <div class="datos-habitacion">
+                        <h4 class="datos-titulo">Datos de la Habitación</h4>
+                        <p class="numero-habitacion">@Model.HabitacionRecomendada.NombreHabitacion - Número @Model.HabitacionRecomendada.NumeroHabitacion</p>
+                    </div>
+
+                    @if (Model.HabitacionRecomendada.FotosHabitacion.Any())
+                    {
+                        <div class="fotos-habitacion">
+                            @foreach (var foto in Model.HabitacionRecomendada.FotosHabitacion.Take(2))
+                            {
+                                <div class="foto-habitacion" style="background-image: url('@foto')"></div>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <h3 class="servicios-titulo">Servicios Incluidos</h3>
+                
+                @if (Model.HabitacionRecomendada.ComodidadesHabitacion.Any() || Model.ServiciosHotel.Any())
+                {
+                    <div class="servicios-grid">
+                        @foreach (var comodidad in Model.HabitacionRecomendada.ComodidadesHabitacion.Take(6))
+                        {
+                            <div class="servicio-item">
+                                <i class="@GetIconForService(comodidad) servicio-icon"></i>
+                                <span class="servicio-texto">@comodidad</span>
+                            </div>
+                        }
+                        
+                        @foreach (var servicio in Model.ServiciosHotel.Take(6 - Model.HabitacionRecomendada.ComodidadesHabitacion.Take(6).Count()))
+                        {
+                            <div class="servicio-item">
+                                <i class="@GetIconForService(servicio) servicio-icon"></i>
+                                <span class="servicio-texto">@servicio</span>
+                            </div>
+                        }
+                    </div>
+                    
+                    @if ((Model.HabitacionRecomendada.ComodidadesHabitacion.Count + Model.ServiciosHotel.Count) > 6)
+                    {
+                        <button class="mostrar-todos" onclick="mostrarTodosServicios()">
+                            Mostrar todos los servicios
+                        </button>
+                    }
+                }
+            }
+            else
+            {
+                <div class="sin-habitaciones">
+                    <h3>No hay habitaciones disponibles</h3>
+                    <p>No se encontraron habitaciones disponibles para las fechas y cantidad de personas seleccionadas.</p>
+                </div>
+            }
+        </div>
+
+        <!-- Panel de reserva exacto como la imagen -->
+        <div class="panel-reserva">
+            <div class="hotel-miniatura">
+                @if (Model.FotosHotel.Any())
+                {
+                    <img src="@Model.FotosHotel.First()" alt="@Model.NombreHotel" class="hotel-foto-mini">
+                }
+                <div class="hotel-info-mini">
+                    <h3>@Model.NombreHotel</h3>
+                    <p>@Model.UbicacionCompleta</p>
+                </div>
+            </div>
+
+            @if (Model.HabitacionRecomendada != null)
+            {
+                <div class="habitacion-destacada">
+                    <h4>@Model.HabitacionRecomendada.NombreHabitacion</h4>
+                </div>
+
+                <div class="precio-principal">₡@Model.PrecioTotal.ToString("N0")</div>
+                <div class="precio-descripcion">Por @Model.CantidadPersonas @(Model.CantidadPersonas == 1 ? "persona" : "personas")</div>
+
+                <div class="resumen-estadia">
+                    <div class="fecha-item">
+                        <span>Check In:</span>
+                        <span>@Model.FechaCheckIn.ToString("dd/MM/yyyy")</span>
+                    </div>
+                    <div class="fecha-item">
+                        <span>Check Out:</span>
+                        <span>@Model.FechaCheckOut.ToString("dd/MM/yyyy")</span>
+                    </div>
+                    <div class="fecha-item">
+                        <span>Huéspedes:</span>
+                        <span>@Model.CantidadPersonas @(Model.CantidadPersonas == 1 ? "persona" : "personas")</span>
+                    </div>
+                    <div class="fecha-item">
+                        <span>Noches:</span>
+                        <span>@Model.NochesEstadia @(Model.NochesEstadia == 1 ? "noche" : "noches")</span>
+                    </div>
+                    <div class="total-estadia">
+                        <span>Precio Total</span>
+                        <span>₡@Model.PrecioTotal.ToString("N0")</span>
+                    </div>
+                </div>
+
+                <button class="btn-reservar" onclick="reservarAhora()">
+                    Reservar Ahora
+                </button>
+
+                <!-- Botón de emergencia para testing -->
+
+                <div style="margin-top: 15px; text-align: center;">
+
+                    <button onclick="console.log('EMERGENCIA CLICK'); window.reservarAhora ? window.reservarAhora() : alert('No existe');" 
+
+                            style="background: red !important; color: white !important; border: none !important; 
+
+                                   padding: 15px !important; border-radius: 5px !important; cursor: pointer !important;
+
+                                   font-weight: bold !important; font-size: 14px !important;"
+
+                            type="button">
+
+                        EMERGENCIA
+
+                    </button>
+
+                </div>
+            }
+            else
+            {
+                <div style="text-align: center; padding: 20px;">
+                    <p>No hay habitaciones disponibles para estas fechas.</p>
+                    <button class="btn-reservar" onclick="volverBusqueda()" style="background: #666;">
+                        Modificar Búsqueda
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@functions {
+    public string GetIconForService(string serviceName)
+    {
+        return serviceName.ToLower() switch
+        {
+            var name when name.Contains("wifi") => "fas fa-wifi",
+            var name when name.Contains("aire") => "fas fa-snowflake",
+            var name when name.Contains("televisión") || name.Contains("tv") => "fas fa-tv",
+            var name when name.Contains("balcón") => "fas fa-building",
+            var name when name.Contains("ventilador") => "fas fa-fan",
+            var name when name.Contains("lavadora") => "fas fa-tshirt",
+            var name when name.Contains("piscina") => "fas fa-swimmer",
+            var name when name.Contains("restaurante") => "fas fa-utensils",
+            var name when name.Contains("patio") => "fas fa-tree",
+            var name when name.Contains("teléfono") => "fas fa-phone",
+            var name when name.Contains("vista") => "fas fa-eye",
+            _ => "fas fa-check"
+        };
+    }
+}
+
+@section Scripts {
+    <script>
+        function reservarAhora() {
+            // Verificar si el usuario está autenticado
+            if (!@(User.Identity.IsAuthenticated ? "true" : "false")) {
+                // Guardar datos de reserva antes de redirigir al login
+                const datosReserva = {
+                    cedulaJuridica: '@Model.CedulaJuridica',
+                    habitacionId: @(Model.HabitacionRecomendada?.HabitacionID ?? 0),
+                    tipoHabitacionId: @(Model.HabitacionRecomendada?.TipoHabitacionID ?? 0),
+                    numeroHabitacion: '@(Model.HabitacionRecomendada?.NumeroHabitacion ?? "")',
+                    fechaCheckIn: '@Model.FechaCheckIn.ToString("yyyy-MM-dd")',
+                    fechaCheckOut: '@Model.FechaCheckOut.ToString("yyyy-MM-dd")',
+                    cantidadPersonas: @Model.CantidadPersonas,
+                    precioTotal: @Model.PrecioTotal.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                    precioPorNoche: @(Model.HabitacionRecomendada?.PrecioPorNoche.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"),
+                    nombreHotel: '@Model.NombreHotel',
+                    nombreHabitacion: '@(Model.HabitacionRecomendada?.NombreHabitacion ?? "")',
+                    ubicacionHotel: '@Model.UbicacionCompleta',
+                    nochesEstadia: @Model.NochesEstadia
+                };
+
+                sessionStorage.setItem('datosReserva', JSON.stringify(datosReserva));
+
+                // Redirigir al login con return URL
+                const returnUrl = encodeURIComponent('@Url.Action("Checkout", "Reservas")');
+                const loginBase = '@Url.Action("Login", "Account")';
+                const loginUrl = `${loginBase}?returnUrl=${returnUrl}`;
+                window.location.href = loginUrl;
+                return
+            }
+
+            // Usuario autenticado - proceder con la reserva
+            const datosReserva = {
+                cedulaJuridica: '@Model.CedulaJuridica',
+                habitacionId: @(Model.HabitacionRecomendada?.HabitacionID ?? 0),
+                tipoHabitacionId: @(Model.HabitacionRecomendada?.TipoHabitacionID ?? 0),
+                numeroHabitacion: '@(Model.HabitacionRecomendada?.NumeroHabitacion ?? "")',
+                fechaCheckIn: '@Model.FechaCheckIn.ToString("yyyy-MM-dd")',
+                fechaCheckOut: '@Model.FechaCheckOut.ToString("yyyy-MM-dd")',
+                cantidadPersonas: @Model.CantidadPersonas,
+                precioTotal: @Model.PrecioTotal.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                precioPorNoche: @(Model.HabitacionRecomendada?.PrecioPorNoche.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0"),
+                nombreHotel: '@Model.NombreHotel',
+                nombreHabitacion: '@(Model.HabitacionRecomendada?.NombreHabitacion ?? "")',
+                ubicacionHotel: '@Model.UbicacionCompleta',
+                nochesEstadia: @Model.NochesEstadia
+            };
+
+            // Guardar en sessionStorage para el proceso de reserva
+            sessionStorage.setItem('datosReserva', JSON.stringify(datosReserva));
+
+            // Redirigir a la página de checkout/reserva
+            window.location.href = '@Url.Action("Checkout", "Reservas")';
+        }
+
+        function mostrarTodosServicios() {
+            // Implementar modal o expansión de servicios
+            alert('Función para mostrar todos los servicios - Por implementar');
+        }
+
+        function volverBusqueda() {
+            history.back();
+        }
+    </script>
+}

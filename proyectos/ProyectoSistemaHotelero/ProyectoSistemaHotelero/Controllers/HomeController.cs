@@ -67,6 +67,29 @@ namespace ProyectoSistemaHotelero.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult BuscarHoteles(string ubicacion, DateTime? checkIn, DateTime? checkOut, int personas = 1)
+        {
+            // Redirigir al controlador de búsqueda con los parámetros
+            return RedirectToAction("Hoteles", "Busqueda", new
+            {
+                ubicacion = ubicacion,
+                checkIn = checkIn,
+                checkOut = checkOut,
+                personas = personas
+            });
+        }
+
+        [HttpGet]
+        public IActionResult BuscarActividades(string ubicacion)
+        {
+            // Redirigir al controlador de búsqueda de actividades (cuando lo implementes)
+            return RedirectToAction("Actividades", "Busqueda", new
+            {
+                ubicacion = ubicacion
+            });
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

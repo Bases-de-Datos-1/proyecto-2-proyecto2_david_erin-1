@@ -1,3 +1,30 @@
+@media (max-width: 768px) {
+    .search-inputs-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .input-col,
+    .input-col.wide {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .buttons-col {
+        width: 100%;
+        justify-content: stretch;
+    }
+
+    .btn-buscar,
+    .btn-filtros {
+        flex: 1;
+    }
+
+    .grid-hoteles {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Estilos para la sección hero */
 .hero-section {
     position: relative;

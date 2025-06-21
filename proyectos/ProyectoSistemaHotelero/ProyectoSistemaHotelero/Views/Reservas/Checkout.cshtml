@@ -1,0 +1,392 @@
+﻿@using ProyectoSistemaHotelero.Models.ViewModels
+@model CheckoutViewModel
+@{
+    ViewData["Title"] = "Finalizar Reserva - UTravel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .checkout-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 120px 20px 50px;
+    }
+
+    .checkout-header {
+        background: white;
+        padding: 25px 30px;
+        border-radius: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+
+    .checkout-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .hotel-info {
+        display: flex;
+        gap: 15px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .hotel-details h4 {
+        margin: 0 0 5px 0;
+        color: #333;
+        font-size: 16px;
+    }
+
+    .hotel-details p {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+    }
+
+    .booking-summary {
+        background: #e8f6f3;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .summary-total {
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .form-container {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #7db8b3;
+        padding-bottom: 10px;
+    }
+
+    .info-text {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        color: #666;
+        border-left: 4px solid #7db8b3;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+        box-sizing: border-box;
+    }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #7db8b3;
+            box-shadow: 0 0 0 3px rgba(125, 184, 179, 0.1);
+        }
+
+    .radio-group {
+        display: flex;
+        gap: 20px;
+        margin-top: 10px;
+    }
+
+    .radio-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+
+        .radio-option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .radio-option label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+    .btn-finalizar {
+        background: linear-gradient(135deg, #7db8b3 0%, #62a3a8 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 15px 40px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+        .btn-finalizar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(125, 184, 179, 0.3);
+        }
+
+        .btn-finalizar:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .customer-info {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+        .customer-info h5 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+
+        .customer-info p {
+            margin: 0 0 5px 0;
+            color: #666;
+            font-size: 14px;
+        }
+</style>
+
+<div class="checkout-container">
+    <div class="checkout-header">
+        <h1 class="checkout-title">Finalizar Reserva</h1>
+
+        <div class="hotel-info">
+            <div class="hotel-details">
+                <h4 id="nombreHotel"></h4>
+                <p id="ubicacionHotel"></p>
+                <p id="tipoHabitacion"></p>
+            </div>
+        </div>
+
+        <div class="booking-summary">
+            <div class="summary-row">
+                <span>Check In:</span>
+                <span id="fechaCheckIn"></span>
+            </div>
+            <div class="summary-row">
+                <span>Check Out:</span>
+                <span id="fechaCheckOut"></span>
+            </div>
+            <div class="summary-row">
+                <span>Huéspedes:</span>
+                <span id="cantidadPersonas"></span>
+            </div>
+            <div class="summary-row">
+                <span>Noches:</span>
+                <span id="nochesEstadia"></span>
+            </div>
+            <div class="summary-row">
+                <span>Precio por noche:</span>
+                <span id="precioPorNoche"></span>
+            </div>
+            <div class="summary-row summary-total">
+                <span>Total:</span>
+                <span id="precioTotal"></span>
+            </div>
+        </div>
+
+        <div class="customer-info">
+            <h5>Información del Cliente</h5>
+            <p><strong>Nombre:</strong> @Model.NombreCliente</p>
+            <p><strong>Email:</strong> @Model.EmailCliente</p>
+            <p><strong>Cédula:</strong> @Model.CedulaCliente</p>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <form asp-action="FinalizarReserva" method="post" id="checkoutForm">
+            @Html.AntiForgeryToken()
+
+            <!-- Campos ocultos con datos de la reserva -->
+            <input type="hidden" asp-for="CedulaJuridica" id="cedulaJuridica" />
+            <input type="hidden" asp-for="HabitacionId" id="habitacionId" />
+            <input type="hidden" asp-for="TipoHabitacionId" id="tipoHabitacionId" />
+            <input type="hidden" asp-for="NumeroHabitacion" id="numeroHabitacion" />
+            <input type="hidden" asp-for="FechaCheckIn" id="fechaCheckInHidden" />
+            <input type="hidden" asp-for="FechaCheckOut" id="fechaCheckOutHidden" />
+            <input type="hidden" asp-for="CantidadPersonas" id="cantidadPersonasHidden" />
+            <input type="hidden" asp-for="PrecioTotal" id="precioTotalHidden" />
+            <input type="hidden" asp-for="PrecioPorNoche" id="precioPorNocheHidden" />
+            <input type="hidden" asp-for="NombreHotel" id="nombreHotelHidden" />
+            <input type="hidden" asp-for="NombreHabitacion" id="nombreHabitacionHidden" />
+            <input type="hidden" asp-for="UbicacionHotel" id="ubicacionHotelHidden" />
+            <input type="hidden" asp-for="NochesEstadia" id="nochesEstadiaHidden" />
+
+            <h3 class="section-title">Últimos Detalles</h3>
+
+            <div class="info-text">
+                • La hora de ingreso es a partir de las 3:00 pm. Por favor ingrese una hora estimada de ingreso.
+            </div>
+
+            <div class="form-group">
+                <label asp-for="HoraIngreso">Hora de Ingreso</label>
+                <select asp-for="HoraIngreso" class="form-control" required>
+                    <option value="">Seleccione una hora</option>
+                    @foreach (var hora in Model.HorasDisponibles.Where(h => TimeSpan.Parse(h.Value) >= new TimeSpan(15, 0, 0)))
+                    {
+                        <option value="@hora.Value" selected="@(hora.Value == " 15:00")">@hora.Text</option>
+                    }
+                </select>
+                <span asp-validation-for="HoraIngreso" class="error-message"></span>
+            </div>
+
+            <div class="info-text">
+                • La hora de salida es máximo a las 12:00 pm. Por favor ingrese una hora estimada de salida.
+            </div>
+
+            <div class="form-group">
+                <label asp-for="HoraSalida">Hora de Salida</label>
+                <select asp-for="HoraSalida" class="form-control" required>
+                    <option value="">Seleccione una hora</option>
+                    @foreach (var hora in Model.HorasDisponibles.Where(h => TimeSpan.Parse(h.Value) <= new TimeSpan(12, 0, 0)))
+                    {
+                        <option value="@hora.Value" selected="@(hora.Value == " 12:00")">@hora.Text</option>
+                    }
+                </select>
+                <span asp-validation-for="HoraSalida" class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Posee Vehículo</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" asp-for="PoseeVehiculo" value="true" id="vehiculoSi" />
+                        <label for="vehiculoSi">Sí</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" asp-for="PoseeVehiculo" value="false" id="vehiculoNo" checked />
+                        <label for="vehiculoNo">No</label>
+                    </div>
+                </div>
+                <span asp-validation-for="PoseeVehiculo" class="error-message"></span>
+            </div>
+
+            <button type="submit" class="btn-finalizar" id="btnFinalizar">
+                Finalizar Reserva
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar datos de la reserva desde sessionStorage
+            const datosReserva = JSON.parse(sessionStorage.getItem('datosReserva') || '{}');
+
+            if (Object.keys(datosReserva).length === 0) {
+                alert('No se encontraron datos de reserva. Redirigiendo a búsqueda...');
+                window.location.href = '@Url.Action("Hoteles", "Busquedas")';
+                return;
+            }
+
+            // Llenar los campos ocultos
+            document.getElementById('cedulaJuridica').value = datosReserva.cedulaJuridica || '';
+            document.getElementById('habitacionId').value = datosReserva.habitacionId || 0;
+            document.getElementById('tipoHabitacionId').value = datosReserva.tipoHabitacionId || 0;
+            document.getElementById('numeroHabitacion').value = datosReserva.numeroHabitacion || '';
+            document.getElementById('fechaCheckInHidden').value = datosReserva.fechaCheckIn || '';
+            document.getElementById('fechaCheckOutHidden').value = datosReserva.fechaCheckOut || '';
+            document.getElementById('cantidadPersonasHidden').value = datosReserva.cantidadPersonas || 1;
+            document.getElementById('precioTotalHidden').value = datosReserva.precioTotal || 0;
+            document.getElementById('precioPorNocheHidden').value = datosReserva.precioPorNoche || 0;
+            document.getElementById('nombreHotelHidden').value = datosReserva.nombreHotel || '';
+            document.getElementById('nombreHabitacionHidden').value = datosReserva.nombreHabitacion || '';
+            document.getElementById('ubicacionHotelHidden').value = datosReserva.ubicacionHotel || '';
+            document.getElementById('nochesEstadiaHidden').value = datosReserva.nochesEstadia || 1;
+
+            // Llenar información visible
+            document.getElementById('nombreHotel').textContent = datosReserva.nombreHotel || '';
+            document.getElementById('ubicacionHotel').textContent = datosReserva.ubicacionHotel || '';
+            document.getElementById('tipoHabitacion').textContent = datosReserva.nombreHabitacion || '';
+
+            // Formatear fechas
+            const fechaCheckIn = new Date(datosReserva.fechaCheckIn);
+            const fechaCheckOut = new Date(datosReserva.fechaCheckOut);
+
+            document.getElementById('fechaCheckIn').textContent = fechaCheckIn.toLocaleDateString('es-ES');
+            document.getElementById('fechaCheckOut').textContent = fechaCheckOut.toLocaleDateString('es-ES');
+            document.getElementById('cantidadPersonas').textContent = `${datosReserva.cantidadPersonas} ${datosReserva.cantidadPersonas === 1 ? 'persona' : 'personas'}`;
+            document.getElementById('nochesEstadia').textContent = `${datosReserva.nochesEstadia} ${datosReserva.nochesEstadia === 1 ? 'noche' : 'noches'}`;
+
+            // Formatear precios
+            const precioTotal = parseFloat(datosReserva.precioTotal || 0);
+            const precioPorNoche = parseFloat(datosReserva.precioPorNoche || 0);
+
+            document.getElementById('precioTotal').textContent = `₡${precioTotal.toLocaleString('es-ES')}`;
+            document.getElementById('precioPorNoche').textContent = `₡${precioPorNoche.toLocaleString('es-ES')}`;
+        });
+
+        // Validación del formulario
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            const horaIngreso = document.querySelector('[name="HoraIngreso"]').value;
+            const horaSalida = document.querySelector('[name="HoraSalida"]').value;
+
+            if (!horaIngreso || !horaSalida) {
+                e.preventDefault();
+                alert('Por favor complete todos los campos requeridos.');
+                return;
+            }
+
+            // Deshabilitar botón para evitar doble envío
+            document.getElementById('btnFinalizar').disabled = true;
+            document.getElementById('btnFinalizar').textContent = 'Procesando...';
+        });
+    </script>
+}

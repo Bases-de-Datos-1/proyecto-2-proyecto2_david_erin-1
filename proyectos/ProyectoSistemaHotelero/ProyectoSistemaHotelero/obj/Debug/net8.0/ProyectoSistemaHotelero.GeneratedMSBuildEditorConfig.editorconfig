@@ -40,6 +40,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Ryby5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Busquedas/DetalleHotel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzcXVlZGFzXERldGFsbGVIb3RlbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Busquedas/Hoteles.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzcXVlZGFzXEhvdGVsZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -126,6 +134,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Recreativo/ServiciosActividad.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVjcmVhdGl2b1xTZXJ2aWNpb3NBY3RpdmlkYWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Reservas/Checkout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXNcQ2hlY2tvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Reservas/Confirmacion.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXNcQ29uZmlybWFjaW9uLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/david/OneDrive/Escritorio/proyecto-2-proyecto2_david_erin-1/proyectos/ProyectoSistemaHotelero/ProyectoSistemaHotelero/Views/Shared/Error.cshtml]

@@ -87,15 +87,8 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav mx-auto">
-                        <li class="nav-item px-3">
-                            <a class="nav-link text-dark fw-bold" asp-area="" asp-controller="Home" asp-action="Hospedajes">Servicios de Hospedaje</a>
-                        </li>
-                        <li class="nav-item px-3">
-                            <a class="nav-link text-dark fw-bold" asp-area="" asp-controller="Home" asp-action="Recreativos">Servicios Recreativos</a>
-                        </li>
-                    </ul>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                    
                     <div class="d-flex align-items-center">
                         <a class="btn btn-dark rounded-pill px-4 me-3" asp-area="" asp-controller="Home" asp-action="SeleccionServicios">Registra Tu Negocio</a>
 
@@ -231,7 +224,7 @@
                         <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                     </a>
                 `;
-                
+
                 // Añadir evento al enlace de logout
                 setTimeout(() => {
                     const logoutLink = document.getElementById('logout-link');
@@ -276,4 +269,3 @@
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-</html>
