@@ -33,7 +33,7 @@ namespace ProyectoSistemaHotelero.Controllers
             // Llenar información del usuario autenticado
             viewModel.NombreCliente = User.FindFirst(ClaimTypes.Name)?.Value ?? "";
             viewModel.EmailCliente = User.FindFirst(ClaimTypes.Email)?.Value ?? "";
-            viewModel.CedulaCliente = User.FindFirst("Cedula")?.Value ?? "";
+            viewModel.CedulaCliente = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
 
             // Generar horas disponibles
             viewModel.HorasDisponibles = GenerarHorasDisponibles();
@@ -48,6 +48,22 @@ namespace ProyectoSistemaHotelero.Controllers
         {
             if (!ModelState.IsValid)
             {
+                modelo.HorasDisponibles = GenerarHorasDisponibles();
+                return View("Checkout", modelo);
+            }
+
+            // Validación adicional: hora de salida no puede ser después de 12:00 PM
+            if (modelo.HoraSalida > new TimeSpan(12, 0, 0))
+            {
+                ModelState.AddModelError("HoraSalida", "La hora de salida no puede ser después de las 12:00 PM.");
+                modelo.HorasDisponibles = GenerarHorasDisponibles();
+                return View("Checkout", modelo);
+            }
+
+            // Validación adicional: hora de ingreso no puede ser antes de 3:00 PM
+            if (modelo.HoraIngreso < new TimeSpan(15, 0, 0))
+            {
+                ModelState.AddModelError("HoraIngreso", "La hora de ingreso no puede ser antes de las 3:00 PM.");
                 modelo.HorasDisponibles = GenerarHorasDisponibles();
                 return View("Checkout", modelo);
             }
@@ -84,9 +100,20 @@ namespace ProyectoSistemaHotelero.Controllers
             catch (SqlException sqlEx)
             {
                 // Manejar errores específicos de SQL
-                string errorMessage = sqlEx.Message.Contains("disponible")
-                    ? "La habitación ya no está disponible para las fechas seleccionadas."
-                    : "Error en la base de datos al procesar la reserva.";
+                string errorMessage = "Error al procesar la reserva.";
+
+                if (sqlEx.Message.Contains("CHK_Estado_Reservacion"))
+                {
+                    errorMessage = "Estado de reservación inválido.";
+                }
+                else if (sqlEx.Message.Contains("FechaSalida"))
+                {
+                    errorMessage = "La hora de salida debe ser antes de las 12:00 PM.";
+                }
+                else if (sqlEx.Message.Contains("disponible"))
+                {
+                    errorMessage = "La habitación ya no está disponible para las fechas seleccionadas.";
+                }
 
                 ModelState.AddModelError("", errorMessage);
                 modelo.HorasDisponibles = GenerarHorasDisponibles();
@@ -138,7 +165,7 @@ namespace ProyectoSistemaHotelero.Controllers
         {
             var horas = new List<TimeOption>();
 
-            // Horas de ingreso (desde 12:00 PM hasta 11:00 PM)
+            // Horas de ingreso (desde 12:00 PM hasta 11:30 PM)
             for (int hora = 12; hora <= 23; hora++)
             {
                 for (int minuto = 0; minuto < 60; minuto += 30)
@@ -154,7 +181,26 @@ namespace ProyectoSistemaHotelero.Controllers
                 }
             }
 
-            return horas;
+            // Agregar horas de salida (desde 6:00 AM hasta 12:00 PM)
+            for (int hora = 6; hora <= 12; hora++)
+            {
+                for (int minuto = 0; minuto < 60; minuto += 30)
+                {
+                    // Para las 12:00, solo agregamos 12:00, no 12:30
+                    if (hora == 12 && minuto > 0) break;
+
+                    var time = new TimeSpan(hora, minuto, 0);
+                    var displayTime = DateTime.Today.Add(time).ToString("h:mm tt");
+
+                    horas.Add(new TimeOption
+                    {
+                        Value = time.ToString(@"hh\:mm"),
+                        Text = displayTime
+                    });
+                }
+            }
+
+            return horas.OrderBy(h => TimeSpan.Parse(h.Value)).ToList();
         }
 
         [HttpGet]

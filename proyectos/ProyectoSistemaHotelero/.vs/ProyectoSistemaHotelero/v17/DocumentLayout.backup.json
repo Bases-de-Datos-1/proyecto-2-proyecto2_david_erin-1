@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{FFC36284-4A7F-417A-9B42-FCA9CC2252D9}|ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj|c:\\users\\david\\onedrive\\escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\proyectosistemahotelero\\proyectosistemahotelero\\views\\reservas\\confirmacion.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{FFC36284-4A7F-417A-9B42-FCA9CC2252D9}|ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj|solutionrelative:proyectosistemahotelero\\views\\reservas\\confirmacion.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FFC36284-4A7F-417A-9B42-FCA9CC2252D9}|ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj|c:\\users\\david\\onedrive\\escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\proyectosistemahotelero\\proyectosistemahotelero\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FFC36284-4A7F-417A-9B42-FCA9CC2252D9}|ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj|solutionrelative:proyectosistemahotelero\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{FFC36284-4A7F-417A-9B42-FCA9CC2252D9}|ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj|c:\\users\\david\\onedrive\\escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\proyectosistemahotelero\\proyectosistemahotelero\\controllers\\reservascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FFC36284-4A7F-417A-9B42-FCA9CC2252D9}|ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj|solutionrelative:proyectosistemahotelero\\controllers\\reservascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -11,8 +19,8 @@
       "RelativeMoniker": "D:0:0:{FFC36284-4A7F-417A-9B42-FCA9CC2252D9}|ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj|solutionrelative:proyectosistemahotelero\\views\\reservas\\checkout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FFC36284-4A7F-417A-9B42-FCA9CC2252D9}|ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj|c:\\users\\david\\onedrive\\escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\proyectosistemahotelero\\proyectosistemahotelero\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FFC36284-4A7F-417A-9B42-FCA9CC2252D9}|ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj|solutionrelative:proyectosistemahotelero\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{FFC36284-4A7F-417A-9B42-FCA9CC2252D9}|ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj|c:\\users\\david\\onedrive\\escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\proyectosistemahotelero\\proyectosistemahotelero\\models\\viewmodels\\confirmacionreservaviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FFC36284-4A7F-417A-9B42-FCA9CC2252D9}|ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj|solutionrelative:proyectosistemahotelero\\models\\viewmodels\\confirmacionreservaviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{FFC36284-4A7F-417A-9B42-FCA9CC2252D9}|ProyectoSistemaHotelero\\ProyectoSistemaHotelero.csproj|c:\\users\\david\\onedrive\\escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\proyectosistemahotelero\\proyectosistemahotelero\\models\\loginresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -34,35 +42,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 5,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "AccountController.cs",
-              "DocumentMoniker": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Controllers\\AccountController.cs",
-              "RelativeDocumentMoniker": "ProyectoSistemaHotelero\\Controllers\\AccountController.cs",
-              "ToolTip": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Controllers\\AccountController.cs",
-              "RelativeToolTip": "ProyectoSistemaHotelero\\Controllers\\AccountController.cs",
-              "ViewState": "AgIAAJQAAAAAAAAAAAAzwKYAAABCAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-21T20:02:27.16Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "LoginResult.cs",
-              "DocumentMoniker": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Models\\LoginResult.cs",
-              "RelativeDocumentMoniker": "ProyectoSistemaHotelero\\Models\\LoginResult.cs",
-              "ToolTip": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Models\\LoginResult.cs",
-              "RelativeToolTip": "ProyectoSistemaHotelero\\Models\\LoginResult.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-21T22:52:24.599Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
@@ -85,33 +66,84 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Confirmacion.cshtml",
+              "DocumentMoniker": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Views\\Reservas\\Confirmacion.cshtml",
+              "RelativeDocumentMoniker": "ProyectoSistemaHotelero\\Views\\Reservas\\Confirmacion.cshtml",
+              "ToolTip": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Views\\Reservas\\Confirmacion.cshtml",
+              "RelativeToolTip": "ProyectoSistemaHotelero\\Views\\Reservas\\Confirmacion.cshtml",
+              "ViewState": "AgIAAGgBAAAAAAAAAAAAAKIBAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-21T23:12:12.369Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "ProyectoSistemaHotelero\\Controllers\\AccountController.cs",
+              "ToolTip": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "ProyectoSistemaHotelero\\Controllers\\AccountController.cs",
+              "ViewState": "AgIAAJUAAAAAAAAAAAAAwLIAAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-21T20:02:27.16Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ConfirmacionReservaViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Models\\ViewModels\\ConfirmacionReservaViewModel.cs",
+              "RelativeDocumentMoniker": "ProyectoSistemaHotelero\\Models\\ViewModels\\ConfirmacionReservaViewModel.cs",
+              "ToolTip": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Models\\ViewModels\\ConfirmacionReservaViewModel.cs",
+              "RelativeToolTip": "ProyectoSistemaHotelero\\Models\\ViewModels\\ConfirmacionReservaViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-21T23:08:55.513Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "LoginResult.cs",
+              "DocumentMoniker": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Models\\LoginResult.cs",
+              "RelativeDocumentMoniker": "ProyectoSistemaHotelero\\Models\\LoginResult.cs",
+              "ToolTip": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Models\\LoginResult.cs",
+              "RelativeToolTip": "ProyectoSistemaHotelero\\Models\\LoginResult.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-21T22:52:24.599Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "Checkout.cshtml",
               "DocumentMoniker": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Views\\Reservas\\Checkout.cshtml",
               "RelativeDocumentMoniker": "ProyectoSistemaHotelero\\Views\\Reservas\\Checkout.cshtml",
               "ToolTip": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Views\\Reservas\\Checkout.cshtml",
               "RelativeToolTip": "ProyectoSistemaHotelero\\Views\\Reservas\\Checkout.cshtml",
-              "ViewState": "AgIAANMAAAAAAAAAAAAjwBIAAAAuAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-06-21T21:14:49.547Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "ReservasController.cs",
               "DocumentMoniker": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Controllers\\ReservasController.cs",
               "RelativeDocumentMoniker": "ProyectoSistemaHotelero\\Controllers\\ReservasController.cs",
               "ToolTip": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Controllers\\ReservasController.cs",
               "RelativeToolTip": "ProyectoSistemaHotelero\\Controllers\\ReservasController.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAgwB8AAAA0AAAAAAAAAA==",
+              "ViewState": "AgIAAHAAAAAAAAAAAAAQwIIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-21T19:43:14.413Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "DetalleHotel.cshtml",
               "DocumentMoniker": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Views\\Busquedas\\DetalleHotel.cshtml",
               "RelativeDocumentMoniker": "ProyectoSistemaHotelero\\Views\\Busquedas\\DetalleHotel.cshtml",
@@ -119,12 +151,11 @@
               "RelativeToolTip": "ProyectoSistemaHotelero\\Views\\Busquedas\\DetalleHotel.cshtml",
               "ViewState": "AgIAAA0CAAAAAAAAAAAkwDACAAA8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-21T13:42:06.313Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-21T13:42:06.313Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "BusquedaHotelesViewModel.cs",
               "DocumentMoniker": "C:\\Users\\david\\OneDrive\\Escritorio\\proyecto-2-proyecto2_david_erin-1\\proyectos\\ProyectoSistemaHotelero\\ProyectoSistemaHotelero\\Models\\ViewModels\\BusquedaHotelesViewModel.cs",
               "RelativeDocumentMoniker": "ProyectoSistemaHotelero\\Models\\ViewModels\\BusquedaHotelesViewModel.cs",
@@ -132,8 +163,7 @@
               "RelativeToolTip": "ProyectoSistemaHotelero\\Models\\ViewModels\\BusquedaHotelesViewModel.cs",
               "ViewState": "AgIAAAgAAAAAAAAAAAAIwAwAAABHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-20T13:58:07.255Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-20T13:58:07.255Z"
             }
           ]
         }

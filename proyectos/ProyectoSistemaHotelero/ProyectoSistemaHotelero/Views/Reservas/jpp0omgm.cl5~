@@ -1,5 +1,4 @@
-﻿@using ProyectoSistemaHotelero.Models.ViewModels
-@model ConfirmacionReservaViewModel
+﻿@model ConfirmacionReservaViewModel
 @{
     ViewData["Title"] = "Reserva Confirmada - UTravel";
     Layout = "~/Views/Shared/_Layout.cshtml";

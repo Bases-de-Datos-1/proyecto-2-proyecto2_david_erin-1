@@ -276,7 +276,7 @@
                     <option value="">Seleccione una hora</option>
                     @foreach (var hora in Model.HorasDisponibles.Where(h => TimeSpan.Parse(h.Value) >= new TimeSpan(15, 0, 0)))
                     {
-                        <option value="@hora.Value" selected="@(hora.Value == " 15:00")">@hora.Text</option>
+                        <option value="@hora.Value" selected="@(hora.Value == "15:30")">@hora.Text</option>
                     }
                 </select>
                 <span asp-validation-for="HoraIngreso" class="error-message"></span>
@@ -290,9 +290,9 @@
                 <label asp-for="HoraSalida">Hora de Salida</label>
                 <select asp-for="HoraSalida" class="form-control" required>
                     <option value="">Seleccione una hora</option>
-                    @foreach (var hora in Model.HorasDisponibles.Where(h => TimeSpan.Parse(h.Value) <= new TimeSpan(12, 0, 0)))
+                    @foreach (var hora in Model.HorasDisponibles.Where(h => TimeSpan.Parse(h.Value) >= new TimeSpan(6, 0, 0) && TimeSpan.Parse(h.Value) <= new TimeSpan(12, 0, 0)))
                     {
-                        <option value="@hora.Value" selected="@(hora.Value == " 12:00")">@hora.Text</option>
+                        <option value="@hora.Value" selected="@(hora.Value == "09:00")">@hora.Text</option>
                     }
                 </select>
                 <span asp-validation-for="HoraSalida" class="error-message"></span>
