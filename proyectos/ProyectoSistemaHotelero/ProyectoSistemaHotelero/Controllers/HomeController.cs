@@ -71,7 +71,7 @@ namespace ProyectoSistemaHotelero.Controllers
         public IActionResult BuscarHoteles(string ubicacion, DateTime? checkIn, DateTime? checkOut, int personas = 1)
         {
             // Redirigir al controlador de búsqueda con los parámetros
-            return RedirectToAction("Hoteles", "Busqueda", new
+            return RedirectToAction("Hoteles", "Busquedas", new
             {
                 ubicacion = ubicacion,
                 checkIn = checkIn,
@@ -83,11 +83,17 @@ namespace ProyectoSistemaHotelero.Controllers
         [HttpGet]
         public IActionResult BuscarActividades(string ubicacion)
         {
-            // Redirigir al controlador de búsqueda de actividades (cuando lo implementes)
-            return RedirectToAction("Actividades", "Busqueda", new
+            Console.WriteLine($"DEBUG HomeController: BuscarActividades llamado con ubicacion='{ubicacion}'");
+            Console.WriteLine($"DEBUG HomeController: Redirigiendo a Actividades en BusquedasController");
+
+            // Verificar que los parámetros lleguen correctamente
+            var result = RedirectToAction("Actividades", "Busquedas", new
             {
                 ubicacion = ubicacion
             });
+
+            Console.WriteLine($"DEBUG HomeController: RedirectToAction creado");
+            return result;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -447,5 +447,335 @@ namespace ProyectoSistemaHotelero.Controllers
 
             viewModel.FotosHotel = fotosGenerales;
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Actividades(string ubicacion = "", int pagina = 1)
+        {
+            var viewModel = new BusquedaActividadesViewModel
+            {
+                Ubicacion = ubicacion,
+                PaginaActual = pagina
+            };
+
+            // Cargar tipos de actividad y servicios para filtros
+            viewModel.TiposActividadDisponibles = await ObtenerTiposActividad();
+            viewModel.ServiciosActividadDisponibles = await ObtenerServiciosActividad();
+
+            // Realizar búsqueda si hay criterios
+            if (!string.IsNullOrEmpty(ubicacion))
+            {
+                await RealizarBusquedaActividades(viewModel);
+            }
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> BuscarActividades(BusquedaActividadesViewModel modelo)
+        {
+            if (modelo == null)
+            {
+                return RedirectToAction("Actividades");
+            }
+
+            Console.WriteLine($"Búsqueda de actividades recibida - Ubicación: {modelo.Ubicacion}");
+
+            modelo.TiposActividadDisponibles = await ObtenerTiposActividad();
+            modelo.ServiciosActividadDisponibles = await ObtenerServiciosActividad();
+
+            await RealizarBusquedaActividades(modelo);
+
+            return View("Actividades", modelo);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AplicarFiltrosActividades(BusquedaActividadesViewModel modelo)
+        {
+            if (modelo == null)
+            {
+                return RedirectToAction("Actividades");
+            }
+
+            modelo.TiposActividadDisponibles = await ObtenerTiposActividad();
+            modelo.ServiciosActividadDisponibles = await ObtenerServiciosActividad();
+            modelo.PaginaActual = 1; // Resetear a primera página
+
+            await RealizarBusquedaActividades(modelo);
+
+            return View("Actividades", modelo);
+        }
+
+        private async Task RealizarBusquedaActividades(BusquedaActividadesViewModel viewModel)
+        {
+            try
+            {
+                using var connection = new SqlConnection(_connectionString);
+                using var command = new SqlCommand("sp_BuscarActividadesAvanzado", connection)
+                {
+                    CommandType = CommandType.StoredProcedure,
+                    CommandTimeout = 60
+                };
+
+                // Parámetros del stored procedure
+                command.Parameters.AddWithValue("@Ubicacion", viewModel.Ubicacion ?? "");
+
+                command.Parameters.AddWithValue("@PrecioMinimo",
+                    viewModel.PrecioMinimo.HasValue ? viewModel.PrecioMinimo.Value : DBNull.Value);
+                command.Parameters.AddWithValue("@PrecioMaximo",
+                    viewModel.PrecioMaximo.HasValue ? viewModel.PrecioMaximo.Value : DBNull.Value);
+
+                // Convertir listas a strings separados por comas
+                var tiposActividadIds = viewModel.TiposActividadSeleccionados?.Any() == true
+                    ? string.Join(",", viewModel.TiposActividadSeleccionados)
+                    : null;
+                var serviciosIds = viewModel.ServiciosActividadSeleccionados?.Any() == true
+                    ? string.Join(",", viewModel.ServiciosActividadSeleccionados)
+                    : null;
+
+                command.Parameters.AddWithValue("@TipoActividadIDs", tiposActividadIds ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@ServicioActividadIDs", serviciosIds ?? (object)DBNull.Value);
+
+                await connection.OpenAsync();
+                using var reader = await command.ExecuteReaderAsync();
+
+                var resultados = new List<ActividadResultado>();
+
+                while (await reader.ReadAsync())
+                {
+                    var actividad = new ActividadResultado
+                    {
+                        CedulaJuridica = reader["CedulaJuridica"]?.ToString() ?? "",
+                        Nombre = reader["Nombre"]?.ToString() ?? "",
+                        UbicacionCompleta = reader["UbicacionCompleta"]?.ToString() ?? "",
+                        Telefono = reader["Telefono"]?.ToString() ?? "",
+                        CorreoElectronico = reader["CorreoElectronico"]?.ToString() ?? "",
+                        NombreContacto = reader["NombreContacto"]?.ToString() ?? "",
+                        Precio = reader["Precio"] != DBNull.Value ? Convert.ToDecimal(reader["Precio"]) : 0,
+                        Descripcion = reader["Descripcion"]?.ToString() ?? ""
+                    };
+
+                    resultados.Add(actividad);
+                }
+
+                // Cerrar el reader antes de hacer otras consultas
+                reader.Close();
+
+                // Enriquecer datos de actividades
+                foreach (var actividad in resultados)
+                {
+                    await EnriquecerDatosActividad(actividad);
+                }
+
+                // Aplicar paginación
+                viewModel.TotalResultados = resultados.Count;
+                var inicio = (viewModel.PaginaActual - 1) * viewModel.ResultadosPorPagina;
+                viewModel.Resultados = resultados.Skip(inicio)
+                                                .Take(viewModel.ResultadosPorPagina)
+                                                .ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en búsqueda de actividades: {ex.Message}");
+                viewModel.Resultados = new List<ActividadResultado>();
+                viewModel.TotalResultados = 0;
+            }
+        }
+
+        private async Task EnriquecerDatosActividad(ActividadResultado actividad)
+        {
+            try
+            {
+                using var connection = new SqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                // Obtener tipos de actividad
+                var tiposQuery = @"
+            SELECT TipoActividad
+            FROM ActividadesServicios AS_VIEW
+            WHERE AS_VIEW.CedulaJuridica = @CedulaJuridica";
+
+                using var tiposCommand = new SqlCommand(tiposQuery, connection);
+                tiposCommand.Parameters.AddWithValue("@CedulaJuridica", actividad.CedulaJuridica);
+
+                using var tiposReader = await tiposCommand.ExecuteReaderAsync();
+                while (await tiposReader.ReadAsync())
+                {
+                    actividad.TiposActividad.Add(tiposReader["Nombre"]?.ToString() ?? "");
+                }
+                tiposReader.Close();
+
+                // Obtener servicios adicionales
+                var serviciosQuery = @"
+            SELECT ServicioActividad
+            FROM ActividadesServiciosAdicionales ASA_VIEW
+            WHERE ASA_VIEW.CedulaJuridica = @CedulaJuridica";
+
+                using var serviciosCommand = new SqlCommand(serviciosQuery, connection);
+                serviciosCommand.Parameters.AddWithValue("@CedulaJuridica", actividad.CedulaJuridica);
+
+                using var serviciosReader = await serviciosCommand.ExecuteReaderAsync();
+                while (await serviciosReader.ReadAsync())
+                {
+                    actividad.ServiciosActividad.Add(serviciosReader["Nombre"]?.ToString() ?? "");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR en EnriquecerDatosActividad: {ex.Message}");
+            }
+        }
+
+        private async Task<List<TipoActividad>> ObtenerTiposActividad()
+        {
+            var tipos = new List<TipoActividad>();
+
+            try
+            {
+                using var connection = new SqlConnection(_connectionString);
+                var query = "SELECT TipoActividadID, Nombre FROM TipoActividad ORDER BY Nombre";
+                using var command = new SqlCommand(query, connection);
+
+                await connection.OpenAsync();
+                using var reader = await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    tipos.Add(new TipoActividad
+                    {
+                        TipoActividadID = Convert.ToInt32(reader["TipoActividadID"]),
+                        Nombre = reader["Nombre"].ToString()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error obteniendo tipos de actividad: {ex.Message}");
+            }
+
+            return tipos;
+        }
+
+        private async Task<List<ServicioActividad>> ObtenerServiciosActividad()
+        {
+            var servicios = new List<ServicioActividad>();
+
+            try
+            {
+                using var connection = new SqlConnection(_connectionString);
+                var query = "SELECT ServicioActividadID, Nombre FROM ServicioActividad ORDER BY Nombre";
+                using var command = new SqlCommand(query, connection);
+
+                await connection.OpenAsync();
+                using var reader = await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    servicios.Add(new ServicioActividad
+                    {
+                        ServicioActividadID = Convert.ToInt32(reader["ServicioActividadID"]),
+                        Nombre = reader["Nombre"].ToString()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error obteniendo servicios de actividad: {ex.Message}");
+            }
+
+            return servicios;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DetalleActividad(string cedulaJuridica)
+        {
+            if (string.IsNullOrEmpty(cedulaJuridica))
+            {
+                return RedirectToAction("Actividades");
+            }
+
+            try
+            {
+                var viewModel = await ObtenerDetallesCompletosActividad(cedulaJuridica);
+
+                if (viewModel == null)
+                {
+                    TempData["Error"] = "No se encontró la actividad especificada.";
+                    return RedirectToAction("Actividades");
+                }
+
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error obteniendo detalles de actividad: {ex.Message}");
+                return RedirectToAction("Actividades");
+            }
+        }
+
+        private async Task<DetalleActividadViewModel?> ObtenerDetallesCompletosActividad(string cedulaJuridica)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand("sp_ObtenerDetallesActividad", connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+
+            command.Parameters.AddWithValue("@CedulaJuridica", cedulaJuridica);
+
+            await connection.OpenAsync();
+            using var reader = await command.ExecuteReaderAsync();
+
+            DetalleActividadViewModel? viewModel = null;
+
+            // 1. Información general de la empresa
+            if (await reader.ReadAsync())
+            {
+                viewModel = new DetalleActividadViewModel
+                {
+                    CedulaJuridica = reader["CedulaJuridica"]?.ToString() ?? "",
+                    NombreEmpresa = reader["Nombre"]?.ToString() ?? "",
+                    UbicacionCompleta = reader["UbicacionCompleta"]?.ToString() ?? "",
+                    DireccionCompleta = reader["DireccionCompleta"]?.ToString() ?? "",
+                    Telefono = reader["Telefono"]?.ToString() ?? "",
+                    CorreoElectronico = reader["CorreoElectronico"]?.ToString() ?? "",
+                    NombreContacto = reader["NombreContacto"]?.ToString() ?? "",
+                    Precio = Convert.ToDecimal(reader["Precio"]),
+                    Descripcion = reader["Descripcion"]?.ToString() ?? ""
+                };
+
+                // Crear galería con la imagen por defecto repetida 5 veces
+                for (int i = 0; i < 5; i++)
+                {
+                    viewModel.FotosActividad.Add("/ImagenesBG/bghomepage.png");
+                }
+            }
+
+            // 2. Tipos de actividad
+            await reader.NextResultAsync();
+            if (viewModel != null)
+            {
+                while (await reader.ReadAsync())
+                {
+                    viewModel.TiposActividad.Add(new TipoActividadDetalle
+                    {
+                        TipoActividadID = Convert.ToInt32(reader["TipoActividadID"]),
+                        Nombre = reader["TipoActividad"]?.ToString() ?? "",
+                        Descripcion = reader["DescripcionTipo"]?.ToString() ?? ""
+                    });
+                }
+            }
+
+            // 3. Servicios incluidos
+            await reader.NextResultAsync();
+            if (viewModel != null)
+            {
+                while (await reader.ReadAsync())
+                {
+                    viewModel.ServiciosIncluidos.Add(reader["ServicioActividad"]?.ToString() ?? "");
+                }
+            }
+
+            return viewModel;
+        }
     }
 }
