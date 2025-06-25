@@ -118,3 +118,40 @@ BEGIN
         PRINT 'Error al realizar check-out: ' + ERROR_MESSAGE()
     END CATCH
 END
+
+
+-- Trigger para prevenir eliminación de facturas
+CREATE TRIGGER TR_DeleteFacturacion
+ON Facturacion
+INSTEAD OF DELETE
+AS
+BEGIN
+    RAISERROR('No se permite eliminar facturas del sistema.', 16, 1);
+    ROLLBACK TRANSACTION;
+    RETURN;
+END;
+GO
+
+-- Trigger para prevenir eliminación de reservaciones
+CREATE TRIGGER TR_DeleteReservacion
+ON Reservacion
+INSTEAD OF DELETE
+AS
+BEGIN
+    RAISERROR('No se permite eliminar reservaciones del sistema. Las reservaciones deben cerrarse cambiando su estado.', 16, 1);
+    ROLLBACK TRANSACTION;
+    RETURN;
+END;
+GO
+
+-- Trigger para prevenir eliminación de clientes
+CREATE TRIGGER TR_DeleteCliente
+ON Cliente
+INSTEAD OF DELETE
+AS
+BEGIN
+    RAISERROR('No se permite eliminar registros de clientes del sistema  de historial.', 16, 1);
+    ROLLBACK TRANSACTION;
+    RETURN;
+END;
+GO
