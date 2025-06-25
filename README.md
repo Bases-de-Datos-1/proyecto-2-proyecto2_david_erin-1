@@ -2,7 +2,7 @@
 # SISTEMA DE GESTION HOTELERA
 ### Nombre y carné de los integrantes: 
 - Erin Camacho Gonzalez - 2024073710
-- David Xalvo Garcia - 2024122451
+- David Calvo Garcia - 2024122451
 
 
 ### Estado del proyecto: Regular 
