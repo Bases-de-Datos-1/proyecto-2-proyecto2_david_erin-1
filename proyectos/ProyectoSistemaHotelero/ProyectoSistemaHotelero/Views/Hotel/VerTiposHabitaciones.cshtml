@@ -1,0 +1,448 @@
+﻿@using ProyectoSistemaHotelero.Models.ViewModels
+@model List<TipoHabitacionListViewModel>
+@{
+    ViewData["Title"] = "Tipos de Habitaciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string nombreServicio = ViewBag.NombreServicio ?? "Su Hotel";
+}
+
+<style>
+    .admin-panel-container {
+        background-color: #f8f9fa;
+        min-height: 100vh;
+        padding: 120px 0;
+    }
+
+    .habitaciones-panel {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .service-header {
+        display: flex;
+        align-items: center;
+        font-size: 20px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .service-header i {
+        margin-right: 10px;
+        color: #62B1B1;
+        font-size: 24px;
+    }
+
+    .btn-volver {
+        background: #6c757d;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-volver:hover {
+        background: #545b62;
+        color: white;
+        text-decoration: none;
+        transform: translateY(-1px);
+    }
+
+    .tipos-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .tipos-table th {
+        background-color: #f8f9fa;
+        padding: 15px 12px;
+        text-align: left;
+        font-weight: 600;
+        color: #333;
+        border-bottom: 2px solid #e9ecef;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .tipos-table td {
+        padding: 15px 12px;
+        border-bottom: 1px solid #e9ecef;
+        color: #666;
+        vertical-align: middle;
+    }
+
+    .tipos-table tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .nombre-tipo {
+        font-weight: 600;
+        font-size: 16px;
+        color: #333;
+    }
+
+    .precio {
+        font-weight: 600;
+        color: #62B1B1;
+        font-size: 15px;
+    }
+
+    .acciones-btn {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .btn-sm {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .btn-editar {
+        background: #007bff;
+        color: white;
+    }
+
+    .btn-editar:hover {
+        background: #0056b3;
+        color: white;
+        text-decoration: none;
+        transform: translateY(-1px);
+    }
+
+    .btn-eliminar {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-eliminar:hover {
+        background: #c82333;
+        transform: translateY(-1px);
+    }
+
+    .btn-eliminar:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    .no-tipos {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+    }
+
+    .no-tipos i {
+        font-size: 48px;
+        color: #ccc;
+        margin-bottom: 20px;
+    }
+
+    .no-tipos h3 {
+        font-size: 20px;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .btn-agregar {
+        background: #62B1B1;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 15px;
+    }
+
+    .btn-agregar:hover {
+        background: #4a9999;
+        color: white;
+        text-decoration: none;
+        transform: translateY(-1px);
+    }
+
+    .info-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+        margin-top: 5px;
+    }
+
+    .warning {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .alert {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+    }
+
+    .descripcion-corta {
+        max-width: 300px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 14px;
+    }
+
+        
+        .tipos-table th,
+        .tipos-table td {
+            padding: 10px 8px;
+        }
+        
+        .acciones-btn {
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .btn-sm {
+            font-size: 11px;
+            padding: 4px 8px;
+        }
+    }
+</style>
+
+<div class="admin-panel-container">
+    <div class="container">
+        <div class="habitaciones-panel">
+            <div class="panel-header">
+                <div class="service-header">
+                    <i class="fas fa-bed"></i>
+                    <span>Tipos de Habitaciones - @nombreServicio</span>
+                </div>
+                <a href="@Url.Action("AdministrarHabitaciones")" class="btn-volver">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </a>
+            </div>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    @TempData["Success"]
+                </div>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    @TempData["Error"]
+                </div>
+            }
+
+            @if (Model.Any())
+            {
+                <div style="overflow-x: auto;">
+                    <table class="tipos-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Precio</th>
+                                <th>Capacidad</th>
+                                <th>Habitaciones</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var tipo in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="nombre-tipo">@tipo.Nombre</div>
+                                    </td>
+                                    <td>
+                                        <div class="descripcion-corta" title="@tipo.Descripcion">@tipo.Descripcion</div>
+                                    </td>
+                                    <td>
+                                        <div class="precio">₡@tipo.PrecioPorNoche.ToString("N0")</div>
+                                    </td>
+                                    <td>
+                                        <div>@tipo.TotalHabitaciones</div>
+                                        @if (tipo.TotalReservas > 0)
+                                        {
+                                            <div class="info-badge warning">@tipo.TotalReservas reservas</div>
+                                        }
+                                        else if (tipo.TotalHabitaciones > 0)
+                                        {
+                                            <div class="info-badge success">Sin reservas</div>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="acciones-btn">
+                                            <a href="@Url.Action("EditarTipoHabitacion", new { tipoHabitacionId = tipo.TipoHabitacionID })" 
+                                               class="btn-sm btn-editar">
+                                                <i class="fas fa-edit"></i>
+                                                Editar
+                                            </a>
+                                            
+                                            @if (tipo.PuedeEliminar)
+                                            {
+                                                <button type="button" 
+                                                        class="btn-sm btn-eliminar"
+                                                        onclick="confirmarEliminar(@tipo.TipoHabitacionID, '@tipo.Nombre')">
+                                                    <i class="fas fa-trash"></i>
+                                                    Eliminar
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" 
+                                                        class="btn-sm btn-eliminar" 
+                                                        disabled
+                                                        title="No se puede eliminar: tiene habitaciones o reservas asociadas">
+                                                    <i class="fas fa-trash"></i>
+                                                    No Disponible
+                                                </button>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="no-tipos">
+                    <i class="fas fa-bed"></i>
+                    <h3>No hay tipos de habitaciones registrados</h3>
+                    <p>Comience agregando tipos de habitaciones a su establecimiento.</p>
+                    <a href="@Url.Action("AgregarTipoHabitacion")" class="btn-agregar">
+                        <i class="fas fa-plus"></i>
+                        Agregar Primer Tipo de Habitación
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación -->
+<div class="modal fade" id="modalConfirmacion" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro que desea eliminar el tipo de habitación <strong id="nombreTipoHabitacion"></strong>?</p>
+                <p class="text-danger"><small>Esta acción no se puede deshacer.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let tipoHabitacionAEliminar = 0;
+
+    function confirmarEliminar(tipoHabitacionId, nombre) {
+        tipoHabitacionAEliminar = tipoHabitacionId;
+        document.getElementById('nombreTipoHabitacion').textContent = nombre;
+        
+        const modal = new bootstrap.Modal(document.getElementById('modalConfirmacion'));
+        modal.show();
+    }
+
+    document.getElementById('btnConfirmarEliminar').addEventListener('click', async function() {
+        if (tipoHabitacionAEliminar === 0) return;
+
+        try {
+            const response = await fetch('@Url.Action("EliminarTipoHabitacion")', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: 'tipoHabitacionId=' + tipoHabitacionAEliminar
+            });
+
+            const resultado = await response.json();
+
+            if (resultado.success) {
+                // Cerrar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalConfirmacion'));
+                modal.hide();
+                
+                // Mostrar mensaje de éxito y recargar
+                alert('Tipo de habitación eliminado exitosamente');
+                window.location.reload();
+            } else {
+                alert('Error: ' + resultado.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al eliminar el tipo de habitación');
+        }
+    });
+</script>
+
+@Html.AntiForgeryToken()

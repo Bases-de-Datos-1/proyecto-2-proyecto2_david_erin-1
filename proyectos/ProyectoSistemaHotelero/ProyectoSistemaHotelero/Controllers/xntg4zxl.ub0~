@@ -1,0 +1,976 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
+using ProyectoSistemaHotelero.Models;
+using ProyectoSistemaHotelero.Models.ViewModels;
+using ProyectoSistemaHotelero.Services;
+using System.Data;
+using System.Security.Claims;
+using System.Text.Json;
+
+namespace ProyectoSistemaHotelero.Controllers
+{
+    public class HotelController : Controller
+    {
+        private readonly HotelService _hotelService;
+        private readonly string _connectionString;
+
+        public HotelController(HotelService hotelService, IConfiguration configuration)
+        {
+            _hotelService = hotelService;
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RegistroHospedaje()
+        {
+            var tiposHotel = await _hotelService.GetTiposHotelAsync();
+            return View(tiposHotel);
+        }
+
+        [HttpPost]
+        public IActionResult GuardarTipoHotel(int tipoHotelId)
+        {
+            // Guardar en TempData para recuperarlo después
+            TempData["TipoHotelID"] = tipoHotelId;
+            return RedirectToAction("FormularioHospedaje");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FormularioHospedaje()
+        {
+            ViewBag.TipoHotelID = TempData["TipoHotelID"];
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DetallesHospedaje()
+        {
+            var redesSociales = await _hotelService.GetRedesSocialesAsync();
+            return View(redesSociales);
+        }   
+
+
+        [HttpGet]
+        public async Task<IActionResult> DireccionEstablecimiento()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ServiciosEstablecimiento()
+        {
+            var servicios = await _hotelService.GetServiciosAsync();
+            return View(servicios);
+        }
+
+        [HttpGet]
+        public IActionResult CrearUsuarioAdminHotel()
+        {
+            // Esta vista se mostrará después de seleccionar los servicios
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmacionRegistro()
+        {
+            // Aquí podrías cargar información adicional si es necesario
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegistrarHotel([FromBody] JsonElement data)
+        {
+            try
+            {
+                // Obtener todos los datos del sessionStorage que se enviaron desde el cliente
+                var informacionEspecifica = JsonSerializer.Deserialize<Dictionary<string, object>>(
+                    data.GetProperty("informacionEspecifica").ToString(),
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                
+                var redesSociales = JsonSerializer.Deserialize<Dictionary<string, string>>(
+                    data.GetProperty("redesSociales").ToString(),
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                
+                var direccion = JsonSerializer.Deserialize<Dictionary<string, string>>(
+                    data.GetProperty("direccion").ToString(),
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                
+                var serviciosIds = JsonSerializer.Deserialize<List<int>>(
+                    data.GetProperty("servicios").ToString(),
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                
+                var usuarioAdmin = JsonSerializer.Deserialize<Dictionary<string, string>>(
+                    data.GetProperty("usuario").ToString(),
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                // Mapear los datos a nuestro ViewModel
+                var viewModel = new RegistroHotelViewModel
+                {
+                    Hotel = new EmpresaHotel
+                    {
+                        CedulaJuridica = informacionEspecifica["cedulaJuridica"].ToString(),
+                        Nombre = informacionEspecifica["nombreEstablecimiento"].ToString(),
+                        TipoHotelID = int.Parse(informacionEspecifica["tipoHotelID"].ToString()),
+                        Provincia = direccion["provincia"],
+                        Canton = direccion["canton"],
+                        Distrito = direccion["distrito"],
+                        Barrio = direccion["barrio"],
+                        SeniasExactas = direccion["senasExactas"],
+                        ReferenciaGPS = direccion.ContainsKey("referenciaGps") ? direccion["referenciaGps"] : null,
+                        CorreoElectronico = informacionEspecifica["correoElectronico"].ToString(),
+                        URLSitioWeb = informacionEspecifica.ContainsKey("urlSitioWeb") ?
+                                 informacionEspecifica["urlSitioWeb"].ToString() : null
+                    },
+                    ServiciosSeleccionados = serviciosIds,
+                    Telefonos = new List<TelefonoViewModel>(),
+                    Usuario = new UsuarioSistemaHotelViewModel
+                    {
+                        Nombre = usuarioAdmin["nombre"],
+                        Apellido = usuarioAdmin["apellido"],
+                        Email = usuarioAdmin["email"],
+                        Contrasenia = usuarioAdmin["contrasenia"]
+                    }
+                };
+
+
+               
+                // Agregar teléfonos
+                if (informacionEspecifica.ContainsKey("telefono1"))
+                {
+                    viewModel.Telefonos.Add(new TelefonoViewModel 
+                    { 
+                        CodigoPais = informacionEspecifica["codigoTelefono1"].ToString(),
+                        Numero = informacionEspecifica["telefono1"].ToString() 
+                    });
+                }
+
+                if (informacionEspecifica.ContainsKey("telefono2") && !string.IsNullOrEmpty(informacionEspecifica["telefono2"].ToString()))
+                {
+                    viewModel.Telefonos.Add(new TelefonoViewModel 
+                    { 
+                        CodigoPais = informacionEspecifica["codigoTelefono2"].ToString(),
+                        Numero = informacionEspecifica["telefono2"].ToString() 
+                    });
+                }
+
+                if (informacionEspecifica.ContainsKey("telefono3") && !string.IsNullOrEmpty(informacionEspecifica["telefono3"].ToString()))
+                {
+                    viewModel.Telefonos.Add(new TelefonoViewModel 
+                    { 
+                        CodigoPais = informacionEspecifica["codigoTelefono3"].ToString(),
+                        Numero = informacionEspecifica["telefono3"].ToString() 
+                    });
+                }
+
+                // Agregar redes sociales
+                var listaRedesSociales = await _hotelService.GetRedesSocialesAsync();
+                foreach (var redSocial in listaRedesSociales)
+                {
+                    var keyName = redSocial.Nombre.ToLower().Replace(" ", "");
+                    if (redesSociales.ContainsKey(keyName) && !string.IsNullOrEmpty(redesSociales[keyName]))
+                    {
+                        viewModel.RedesSociales.Add(new RedSocialViewModel
+                        {
+                            RedSocialID = redSocial.RedSocialID,
+                            NombreUsuario = redesSociales[keyName]
+                        });
+                    }
+                }
+
+                // Registrar en la base de datos
+                var result = await _hotelService.RegisterHotelAsync(viewModel);
+                
+                if (result)
+                {
+                    return Json(new { success = true, message = "Hotel registrado exitosamente" });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Error al registrar el hotel" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
+
+        [HttpGet]
+        public IActionResult AdministrarHabitaciones()
+        {
+
+            string cedulaJuridica = User.FindFirstValue("CedulaJuridica");
+
+            var hotel = _hotelService.GetHotelByCedulaJuridica(cedulaJuridica);
+            if (hotel != null)
+            {
+                ViewBag.NombreServicio = hotel.Nombre;
+            }
+            
+            
+            
+            return View();
+        }
+
+        
+        [HttpGet]
+        public async Task<IActionResult> AgregarTipoHabitacion()
+        {
+            string cedulaJuridica = User.FindFirstValue("CedulaJuridica");
+
+            var viewModel = new TipoHabitacionViewModel
+            {
+                TiposCama = await _hotelService.GetTiposCamaAsync(),
+                CedulaJuridica = cedulaJuridica
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AgregarTipoHabitacion(TipoHabitacionViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.TiposCama = await _hotelService.GetTiposCamaAsync();
+                return View(model);
+            }
+
+            // Asignar la cédula jurídica del usuario actual si no está presente
+            if (string.IsNullOrEmpty(model.CedulaJuridica))
+            {
+                model.CedulaJuridica = User.FindFirstValue("CedulaJuridica");
+            }
+
+            // Guardar en TempData para recuperarlo en la siguiente vista
+            TempData["TipoHabitacion"] = JsonSerializer.Serialize(model);
+
+            return RedirectToAction("SeleccionarComodidades");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SeleccionarComodidades()
+        {
+            // Recuperar los datos del tipo de habitación
+            var tipoHabitacionJson = TempData["TipoHabitacion"]?.ToString();
+            if (string.IsNullOrEmpty(tipoHabitacionJson))
+            {
+                return RedirectToAction("AgregarTipoHabitacion");
+            }
+
+            // Mantener los datos en TempData
+            TempData.Keep("TipoHabitacion");
+
+            var tipoHabitacion = JsonSerializer.Deserialize<TipoHabitacionViewModel>(tipoHabitacionJson);
+            var comodidades = await _hotelService.GetComodidadesAsync();
+
+            var viewModel = new TipoHabitacionComodidadesViewModel
+            {
+                TipoHabitacion = tipoHabitacion,
+                Comodidades = comodidades
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GuardarComodidades(List<int> comodidadesSeleccionadas)
+        {
+            // Recuperar los datos del tipo de habitación
+            var tipoHabitacionJson = TempData["TipoHabitacion"]?.ToString();
+            if (string.IsNullOrEmpty(tipoHabitacionJson))
+            {
+                return RedirectToAction("AgregarTipoHabitacion");
+            }
+
+            // Mantener los datos en TempData
+            TempData.Keep("TipoHabitacion");
+
+            // Guardar las comodidades seleccionadas en TempData
+            TempData["ComodidadesSeleccionadas"] = JsonSerializer.Serialize(comodidadesSeleccionadas);
+
+            return RedirectToAction("CargarImagenes");
+        }
+
+        [HttpGet]
+        public IActionResult CargarImagenes()
+        {
+            // Recuperar los datos del tipo de habitación
+            var tipoHabitacionJson = TempData["TipoHabitacion"]?.ToString();
+            var comodidadesJson = TempData["ComodidadesSeleccionadas"]?.ToString();
+
+            if (string.IsNullOrEmpty(tipoHabitacionJson) || string.IsNullOrEmpty(comodidadesJson))
+            {
+                return RedirectToAction("AgregarTipoHabitacion");
+            }
+
+            // Mantener los datos en TempData
+            TempData.Keep("TipoHabitacion");
+            TempData.Keep("ComodidadesSeleccionadas");
+
+            var tipoHabitacion = JsonSerializer.Deserialize<TipoHabitacionViewModel>(tipoHabitacionJson);
+            var comodidadesSeleccionadas = JsonSerializer.Deserialize<List<int>>(comodidadesJson);
+
+            var viewModel = new TipoHabitacionImagenesViewModel
+            {
+                TipoHabitacion = tipoHabitacion,
+                ComodidadesSeleccionadas = comodidadesSeleccionadas
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GuardarImagenes(List<IFormFile> imagenes)
+        {
+            try
+            {
+                // Debug: Verificar que lleguen las imágenes
+                Console.WriteLine($"Número de imágenes recibidas: {imagenes?.Count ?? 0}");
+
+                if (imagenes == null || imagenes.Count == 0)
+                {
+                    TempData["ErrorMessage"] = "No se recibieron imágenes para procesar.";
+                    return RedirectToAction("CargarImagenes");
+                }
+
+                // Recuperar los datos del tipo de habitación y comodidades
+                var tipoHabitacionJson = TempData["TipoHabitacion"]?.ToString();
+                var comodidadesJson = TempData["ComodidadesSeleccionadas"]?.ToString();
+
+                Console.WriteLine($"TipoHabitacion JSON: {!string.IsNullOrEmpty(tipoHabitacionJson)}");
+                Console.WriteLine($"Comodidades JSON: {!string.IsNullOrEmpty(comodidadesJson)}");
+
+                if (string.IsNullOrEmpty(tipoHabitacionJson) || string.IsNullOrEmpty(comodidadesJson))
+                {
+                    TempData["ErrorMessage"] = "Se perdieron los datos de la sesión. Por favor intenta de nuevo.";
+                    return RedirectToAction("AgregarTipoHabitacion");
+                }
+
+                var tipoHabitacion = JsonSerializer.Deserialize<TipoHabitacionViewModel>(tipoHabitacionJson);
+                var comodidadesSeleccionadas = JsonSerializer.Deserialize<List<int>>(comodidadesJson);
+
+                Console.WriteLine($"Tipo habitación deserializado: {tipoHabitacion?.Nombre}");
+                Console.WriteLine($"Comodidades deserializadas: {comodidadesSeleccionadas?.Count ?? 0}");
+
+                // Validar que las imágenes tengan contenido
+                var imagenesValidas = imagenes.Where(img => img != null && img.Length > 0).ToList();
+                Console.WriteLine($"Imágenes válidas: {imagenesValidas.Count}");
+
+                if (imagenesValidas.Count == 0)
+                {
+                    TempData["ErrorMessage"] = "Las imágenes seleccionadas no son válidas.";
+                    return RedirectToAction("CargarImagenes");
+                }
+
+                // Llamar al servicio para guardar todo
+                Console.WriteLine("Llamando al servicio AddTipoHabitacionCompleto...");
+                var result = await _hotelService.AddTipoHabitacionCompleto(tipoHabitacion, comodidadesSeleccionadas, imagenesValidas);
+
+                Console.WriteLine($"Resultado del servicio: {result}");
+
+                if (result)
+                {
+                    TempData["SuccessMessage"] = "El tipo de habitación ha sido añadido correctamente.";
+                    // Limpiar TempData después del éxito
+                    TempData.Remove("TipoHabitacion");
+                    TempData.Remove("ComodidadesSeleccionadas");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Ha ocurrido un error al guardar la información.";
+                }
+
+                return RedirectToAction("AdministrarHabitaciones");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en GuardarImagenes: {ex.Message}");
+                Console.WriteLine($"StackTrace: {ex.StackTrace}");
+
+                TempData["ErrorMessage"] = $"Error inesperado: {ex.Message}";
+                return RedirectToAction("AdministrarHabitaciones");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AgregarHabitacion()
+        {
+            string cedulaJuridica = User.FindFirstValue("CedulaJuridica");
+
+            var tiposHabitacion = await _hotelService.GetTiposHabitacionPorHotelAsync(cedulaJuridica);
+
+            var viewModel = new HabitacionViewModel
+            {
+                CedulaJuridica = cedulaJuridica,
+                TiposHabitacion = tiposHabitacion.Select(t => new SelectListItem
+                {
+                    Value = t.TipoHabitacionID.ToString(),
+                    Text = $"{t.Nombre} - ${t.Precio:F2} ({t.CantidadCamas} {t.TipoCama})"
+                }).ToList()
+            };
+
+            // Verificar si hay tipos de habitación disponibles
+            if (!viewModel.TiposHabitacion.Any())
+            {
+                TempData["ErrorMessage"] = "Debe crear al menos un tipo de habitación antes de agregar habitaciones individuales.";
+                return RedirectToAction("AdministrarHabitaciones");
+            }
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AgregarHabitacion(HabitacionViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Recargar los tipos de habitación
+                var tiposHabitacion = await _hotelService.GetTiposHabitacionPorHotelAsync(model.CedulaJuridica);
+                model.TiposHabitacion = tiposHabitacion.Select(t => new SelectListItem
+                {
+                    Value = t.TipoHabitacionID.ToString(),
+                    Text = $"{t.Nombre} - ${t.Precio:F2} ({t.CantidadCamas} {t.TipoCama})"
+                }).ToList();
+
+                return View(model);
+            }
+
+            // Asignar la cédula jurídica del usuario actual si no está presente
+            if (string.IsNullOrEmpty(model.CedulaJuridica))
+            {
+                model.CedulaJuridica = User.FindFirstValue("CedulaJuridica");
+            }
+
+            var (success, errorMessage) = await _hotelService.AgregarHabitacionAsync(model);
+
+            if (success)
+            {
+                TempData["SuccessMessage"] = $"La habitación número {model.Numero} ha sido agregada correctamente.";
+                return RedirectToAction("AdministrarHabitaciones");
+            }
+            else
+            {
+                // Agregar el error específico al ModelState
+                ModelState.AddModelError("Numero", errorMessage);
+
+                // Recargar los tipos de habitación
+                var tiposHabitacion = await _hotelService.GetTiposHabitacionPorHotelAsync(model.CedulaJuridica);
+                model.TiposHabitacion = tiposHabitacion.Select(t => new SelectListItem
+                {
+                    Value = t.TipoHabitacionID.ToString(),
+                    Text = $"{t.Nombre} - ${t.Precio:F2} ({t.CantidadCamas} {t.TipoCama})"
+                }).ToList();
+
+                return View(model);
+            }
+        }
+
+        // Agregar estos métodos al HotelController existente
+
+        [HttpGet]
+        public async Task<IActionResult> VerHabitaciones()
+        {
+            try
+            {
+                var cedulaJuridica = User.FindFirst("CedulaJuridica")?.Value;
+                if (string.IsNullOrEmpty(cedulaJuridica))
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+
+                var habitaciones = await ObtenerHabitacionesPorHotel(cedulaJuridica);
+                ViewBag.NombreServicio = await ObtenerNombreHotel(cedulaJuridica);
+
+                return View(habitaciones);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al cargar las habitaciones: " + ex.Message;
+                return RedirectToAction("AdministrarHabitaciones");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> VerTiposHabitaciones()
+        {
+            try
+            {
+                var cedulaJuridica = User.FindFirst("CedulaJuridica")?.Value;
+                if (string.IsNullOrEmpty(cedulaJuridica))
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+
+                var tiposHabitaciones = await ObtenerTiposHabitacionesPorHotel(cedulaJuridica);
+                ViewBag.NombreServicio = await ObtenerNombreHotel(cedulaJuridica);
+
+                return View(tiposHabitaciones);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al cargar los tipos de habitaciones: " + ex.Message;
+                return RedirectToAction("AdministrarHabitaciones");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditarHabitacion(int habitacionId)
+        {
+            try
+            {
+                var cedulaJuridica = User.FindFirst("CedulaJuridica")?.Value;
+                if (string.IsNullOrEmpty(cedulaJuridica))
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+
+                var habitacion = await ObtenerHabitacionPorId(habitacionId, cedulaJuridica);
+                if (habitacion == null)
+                {
+                    TempData["Error"] = "Habitación no encontrada.";
+                    return RedirectToAction("VerHabitaciones");
+                }
+
+                // Obtener tipos de habitación para el dropdown
+                habitacion.TiposHabitacion = await ObtenerTiposHabitacionDropdown(cedulaJuridica);
+
+                return View(habitacion);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al cargar la habitación: " + ex.Message;
+                return RedirectToAction("VerHabitaciones");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditarHabitacion(HabitacionEditViewModel modelo)
+        {
+            if (!ModelState.IsValid)
+            {
+                modelo.TiposHabitacion = await ObtenerTiposHabitacionDropdown(modelo.CedulaJuridica);
+                return View(modelo);
+            }
+
+            try
+            {
+                var actualizado = await ActualizarHabitacion(modelo);
+                if (actualizado)
+                {
+                    TempData["Success"] = "Habitación actualizada exitosamente.";
+                    return RedirectToAction("VerHabitaciones");
+                }
+                else
+                {
+                    TempData["Error"] = "No se pudo actualizar la habitación.";
+                    modelo.TiposHabitacion = await ObtenerTiposHabitacionDropdown(modelo.CedulaJuridica);
+                    return View(modelo);
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al actualizar la habitación: " + ex.Message;
+                modelo.TiposHabitacion = await ObtenerTiposHabitacionDropdown(modelo.CedulaJuridica);
+                return View(modelo);
+            }
+        }
+
+        private async Task<string> ObtenerNombreHotel(string cedulaJuridica)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var query = "SELECT Nombre FROM EmpresaHotel WHERE CedulaJuridica = @CedulaJuridica";
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@CedulaJuridica", cedulaJuridica);
+
+            await connection.OpenAsync();
+            var nombre = await command.ExecuteScalarAsync();
+            return nombre?.ToString() ?? "Su Hotel";
+        }
+        private async Task<TipoHabitacionEditViewModel> ObtenerTiposHabitacionPorId(int tipoHabitacionId, string cedulaJuridica)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var query = @"
+            SELECT TipoHabitacionID, Nombre, Descripcion, PrecioPorNoche, CapacidadMaxima
+            FROM TipoHabitacion
+            WHERE TipoHabitacionID = @TipoHabitacionID AND CedulaJuridica = @CedulaJuridica";
+
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@TipoHabitacionID", tipoHabitacionId);
+            command.Parameters.AddWithValue("@CedulaJuridica", cedulaJuridica);
+
+            await connection.OpenAsync();
+            using var reader = await command.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                return new TipoHabitacionEditViewModel
+                {
+                    TipoHabitacionID = Convert.ToInt32(reader["TipoHabitacionID"]),
+                    Nombre = reader["Nombre"].ToString(),
+                    Descripcion = reader["Descripcion"].ToString(),
+                    PrecioPorNoche = Convert.ToDecimal(reader["PrecioPorNoche"]),
+                    CapacidadMaxima = Convert.ToInt32(reader["CapacidadMaxima"]),
+                    CedulaJuridica = cedulaJuridica
+                };
+            }
+
+            return null;
+        }
+
+        private async Task<HabitacionEditViewModel> ObtenerHabitacionPorId(int habitacionId, string cedulaJuridica)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var query = @"
+        SELECT 
+            h.HabitacionID,
+            h.Numero,
+            h.TipoHabitacionID,
+            th.CedulaJuridica
+        FROM Habitaciones h
+        INNER JOIN TipoHabitacion th ON h.TipoHabitacionID = th.TipoHabitacionID
+        WHERE h.HabitacionID = @HabitacionID AND th.CedulaJuridica = @CedulaJuridica";
+
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@HabitacionID", habitacionId);
+            command.Parameters.AddWithValue("@CedulaJuridica", cedulaJuridica);
+
+            await connection.OpenAsync();
+            using var reader = await command.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                return new HabitacionEditViewModel
+                {
+                    HabitacionID = Convert.ToInt32(reader["HabitacionID"]),
+                    Numero = Convert.ToInt32(reader["Numero"]),
+                    TipoHabitacionID = Convert.ToInt32(reader["TipoHabitacionID"]),
+                    CedulaJuridica = reader["CedulaJuridica"].ToString()
+                };
+            }
+
+            return null;
+        }
+
+        private async Task<List<SelectListItem>> ObtenerTiposHabitacionDropdown(string cedulaJuridica)
+        {
+            var tiposHabitacion = await _hotelService.GetTiposHabitacionPorHotelAsync(cedulaJuridica);
+
+            return tiposHabitacion.Select(t => new SelectListItem
+            {
+                Value = t.TipoHabitacionID.ToString(),
+                Text = $"{t.Nombre} - ₡{t.Precio:N0} ({t.CantidadCamas} {t.TipoCama})"
+            }).ToList();
+        }
+
+        private async Task<bool> ActualizarHabitacion(HabitacionEditViewModel modelo)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var query = @"
+        UPDATE Habitaciones
+        SET Numero = @Numero,
+            TipoHabitacionID = @TipoHabitacionID
+        WHERE HabitacionID = @HabitacionID AND 
+              EXISTS (SELECT 1 FROM TipoHabitacion 
+                      WHERE TipoHabitacionID = @TipoHabitacionID 
+                      AND CedulaJuridica = @CedulaJuridica)";
+
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@HabitacionID", modelo.HabitacionID);
+            command.Parameters.AddWithValue("@Numero", modelo.Numero);
+            command.Parameters.AddWithValue("@TipoHabitacionID", modelo.TipoHabitacionID);
+            command.Parameters.AddWithValue("@CedulaJuridica", modelo.CedulaJuridica);
+
+            await connection.OpenAsync();
+            var filasAfectadas = await command.ExecuteNonQueryAsync();
+
+            return filasAfectadas > 0;
+        }
+
+        private async Task<bool> ActualizarTipoHabitacion(TipoHabitacionEditViewModel modelo)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            var query = @"
+            UPDATE TipoHabitacion
+            SET Nombre = @Nombre,
+                Descripcion = @Descripcion,
+                PrecioPorNoche = @PrecioPorNoche,
+                CapacidadMaxima = @CapacidadMaxima
+            WHERE TipoHabitacionID = @TipoHabitacionID AND CedulaJuridica = @CedulaJuridica";
+
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@TipoHabitacionID", modelo.TipoHabitacionID);
+            command.Parameters.AddWithValue("@Nombre", modelo.Nombre);
+            command.Parameters.AddWithValue("@Descripcion", modelo.Descripcion);
+            command.Parameters.AddWithValue("@PrecioPorNoche", modelo.PrecioPorNoche);
+            command.Parameters.AddWithValue("@CapacidadMaxima", modelo.CapacidadMaxima);
+            command.Parameters.AddWithValue("@CedulaJuridica", modelo.CedulaJuridica);
+
+            await connection.OpenAsync();
+            var filasAfectadas = await command.ExecuteNonQueryAsync();
+            return filasAfectadas > 0;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EliminarHabitacion(int habitacionId)
+        {
+            try
+            {
+                var cedulaJuridica = User.FindFirst("CedulaJuridica")?.Value;
+                var resultado = await EliminarHabitacionPorId(habitacionId, cedulaJuridica);
+
+                if (resultado.Success)
+                {
+                    return Json(new { success = true, message = "Habitación eliminada exitosamente." });
+                }
+                else
+                {
+                    return Json(new { success = false, message = resultado.Message });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error al eliminar la habitación: " + ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditarTipoHabitacion(int tipoHabitacionId)
+        {
+            try
+            {
+                var cedulaJuridica = User.FindFirst("CedulaJuridica")?.Value;
+                if (string.IsNullOrEmpty(cedulaJuridica))
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+
+                var tipoHabitacion = await ObtenerTiposHabitacionPorId(tipoHabitacionId, cedulaJuridica);
+                if (tipoHabitacion == null)
+                {
+                    TempData["Error"] = "Tipo de habitación no encontrado.";
+                    return RedirectToAction("VerTiposHabitaciones");
+                }
+
+                return View(tipoHabitacion);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al cargar el tipo de habitación: " + ex.Message;
+                return RedirectToAction("VerTiposHabitaciones");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditarTipoHabitacion(TipoHabitacionEditViewModel modelo)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(modelo);
+            }
+
+            try
+            {
+                var actualizado = await ActualizarTipoHabitacion(modelo);
+                if (actualizado)
+                {
+                    TempData["Success"] = "Tipo de habitación actualizado exitosamente.";
+                    return RedirectToAction("VerTiposHabitaciones");
+                }
+                else
+                {
+                    TempData["Error"] = "No se pudo actualizar el tipo de habitación.";
+                    return View(modelo);
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al actualizar el tipo de habitación: " + ex.Message;
+                return View(modelo);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EliminarTipoHabitacion(int tipoHabitacionId)
+        {
+            try
+            {
+                var cedulaJuridica = User.FindFirst("CedulaJuridica")?.Value;
+                var resultado = await EliminarTipoHabitacionPorId(tipoHabitacionId, cedulaJuridica);
+
+                if (resultado.Success)
+                {
+                    return Json(new { success = true, message = "Tipo de habitación eliminado exitosamente." });
+                }
+                else
+                {
+                    return Json(new { success = false, message = resultado.Message });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error al eliminar el tipo de habitación: " + ex.Message });
+            }
+        }
+
+        // Métodos auxiliares privados
+        private async Task<List<HabitacionListViewModel>> ObtenerHabitacionesPorHotel(string cedulaJuridica)
+        {
+            var habitaciones = new List<HabitacionListViewModel>();
+
+            using var connection = new SqlConnection(_connectionString);
+            var query = @"
+        SELECT 
+            h.HabitacionID,
+            h.Numero,
+            th.Nombre as TipoHabitacion,
+            th.PrecioPorNoche,
+            COUNT(r.ReservacionID) as TotalReservas,
+            COUNT(CASE WHEN r.Estado = 'ACTIVO' THEN 1 END) as ReservasActivas
+        FROM Habitaciones h
+        INNER JOIN TipoHabitacion th ON h.TipoHabitacionID = th.TipoHabitacionID
+        LEFT JOIN Reservaciones r ON h.HabitacionID = r.HabitacionID
+        WHERE th.CedulaJuridica = @CedulaJuridica
+        GROUP BY h.HabitacionID, h.Numero, th.Nombre, th.PrecioPorNoche
+        ORDER BY h.Numero";
+
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@CedulaJuridica", cedulaJuridica);
+
+            await connection.OpenAsync();
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                habitaciones.Add(new HabitacionListViewModel
+                {
+                    HabitacionID = Convert.ToInt32(reader["HabitacionID"]),
+                    Numero = Convert.ToInt32(reader["Numero"]),
+                    TipoHabitacion = reader["TipoHabitacion"].ToString(),
+                    PrecioPorNoche = Convert.ToDecimal(reader["PrecioPorNoche"]),
+                    TotalReservas = Convert.ToInt32(reader["TotalReservas"]),
+                    ReservasActivas = Convert.ToInt32(reader["ReservasActivas"]),
+                    PuedeEliminar = Convert.ToInt32(reader["TotalReservas"]) == 0
+                });
+            }
+
+            return habitaciones;
+        }
+
+        private async Task<List<TipoHabitacionListViewModel>> ObtenerTiposHabitacionesPorHotel(string cedulaJuridica)
+        {
+            var tipos = new List<TipoHabitacionListViewModel>();
+
+            using var connection = new SqlConnection(_connectionString);
+            var query = @"
+        SELECT 
+            th.TipoHabitacionID,
+            th.Nombre,
+            th.Descripcion,
+            th.PrecioPorNoche,
+            th.CapacidadMaxima,
+            COUNT(h.HabitacionID) as TotalHabitaciones,
+            COUNT(r.ReservacionID) as TotalReservas
+        FROM TipoHabitacion th
+        LEFT JOIN Habitaciones h ON th.TipoHabitacionID = h.TipoHabitacionID
+        LEFT JOIN Reservaciones r ON h.HabitacionID = r.HabitacionID
+        WHERE th.CedulaJuridica = @CedulaJuridica
+        GROUP BY th.TipoHabitacionID, th.Nombre, th.Descripcion, th.PrecioPorNoche, th.CapacidadMaxima
+        ORDER BY th.Nombre";
+
+            using var command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@CedulaJuridica", cedulaJuridica);
+
+            await connection.OpenAsync();
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                tipos.Add(new TipoHabitacionListViewModel
+                {
+                    TipoHabitacionID = Convert.ToInt32(reader["TipoHabitacionID"]),
+                    Nombre = reader["Nombre"].ToString(),
+                    Descripcion = reader["Descripcion"].ToString(),
+                    PrecioPorNoche = Convert.ToDecimal(reader["PrecioPorNoche"]),
+                    CapacidadMaxima = Convert.ToInt32(reader["CapacidadMaxima"]),
+                    TotalHabitaciones = Convert.ToInt32(reader["TotalHabitaciones"]),
+                    TotalReservas = Convert.ToInt32(reader["TotalReservas"]),
+                    PuedeEliminar = Convert.ToInt32(reader["TotalReservas"]) == 0 && Convert.ToInt32(reader["TotalHabitaciones"]) == 0
+                });
+            }
+
+            return tipos;
+        }
+
+        private async Task<(bool Success, string Message)> EliminarHabitacionPorId(int habitacionId, string cedulaJuridica)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand("sp_EliminarHabitacion", connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+
+            command.Parameters.AddWithValue("@HabitacionID", habitacionId);
+            command.Parameters.AddWithValue("@CedulaJuridica", cedulaJuridica);
+
+            var outputParam = new SqlParameter("@Mensaje", SqlDbType.NVarChar, 500)
+            {
+                Direction = ParameterDirection.Output
+            };
+            command.Parameters.Add(outputParam);
+
+            var successParam = new SqlParameter("@Success", SqlDbType.Bit)
+            {
+                Direction = ParameterDirection.Output
+            };
+            command.Parameters.Add(successParam); 
+
+            await connection.OpenAsync();
+            await command.ExecuteNonQueryAsync();
+
+            bool success = Convert.ToBoolean(successParam.Value);
+            string message = outputParam.Value?.ToString() ?? "";
+
+            return (success, message);
+        }
+
+        private async Task<(bool Success, string Message)> EliminarTipoHabitacionPorId(int tipoHabitacionId, string cedulaJuridica)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand("sp_EliminarTipoHabitacion", connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+
+            command.Parameters.AddWithValue("@TipoHabitacionID", tipoHabitacionId);
+            command.Parameters.AddWithValue("@CedulaJuridica", cedulaJuridica);
+
+            var outputParam = new SqlParameter("@Mensaje", SqlDbType.NVarChar, 500)
+            {
+                Direction = ParameterDirection.Output
+            };
+            command.Parameters.Add(outputParam);
+
+            var successParam = new SqlParameter("@Success", SqlDbType.Bit)
+            {
+                Direction = ParameterDirection.Output
+            };
+            command.Parameters.Add(successParam);
+
+            await connection.OpenAsync();
+            await command.ExecuteNonQueryAsync();
+
+            bool success = Convert.ToBoolean(successParam.Value);
+            string message = outputParam.Value?.ToString() ?? "";
+
+            return (success, message);
+        }
+
+    }
+}
